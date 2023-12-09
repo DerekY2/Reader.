@@ -110,38 +110,23 @@ var cr_default_css = `
 var cr_background_color_light = "#FFFFFF";
 var cr_text_color_light = "#333333";
 var cr_link_color_light = "#5F6368";
-var cr_highlighter_color_light = "#7FFFD0";
 var cr_background_color_dark = "#35363a";
 var default_background_color_dark = "#35363a"
 var default_background_color_light = "#FFFFFF"
 var cr_text_color_dark = "#E0E0E0";
 var cr_link_color_dark = "#FFFFFF";
-var cr_highlighter_color_dark = "#FF0099";
 var cr_background_color = "#F8F1E3";
 var cr_text_color = "#333333";
 var cr_link_color = "#5F6368";
-var cr_highlighter_color = "#FFCC99";
 var cr_theme = "cr-theme-custom";
 var cr_dark_panel = "on";
 var cr_display_footer = "off";
-var cr_scroll_speed = 100000;
 var cr_display_outline = "off";
 var cr_display_images = "on";
 var cr_display_notes = "on";
 var cr_display_meta = "on";
 var cr_display_author = "on";
 var cr_display_reading_time = "on";
-var cr_display_saved_info = "on";
-var cr_display_ruler = "off";
-var cr_ruler_color = "#795CFF";
-var cr_ruler_height = 30;
-var cr_ruler_position = 15;
-var cr_auto_run_rules = "";
-var cr_translate_to = "en";
-var cr_articulate_voice = "Alex";
-var cr_articulate_rate = 1;
-var cr_articulate_pitch = 1;
-var cr_articulate_volume = 1;
 
 // Encode/Decode HTML based on LZW compression
 function compressHTML(document) {
@@ -488,80 +473,6 @@ function addStyleTags(doc){
 
   style_url = chrome.runtime.getURL("styles/semantic.css");
   $(doc).find('head').append("<link rel='stylesheet' type='text/css' href='"+style_url+"'>");
-}
-
-// Removes the .active CSS class from all spans.
-function clearHighlight(doc) {
-  $(doc).find("span[data-count]").removeClass("active");
-}
-
-/*
-* This allows us to highlight the currently spoken word, by refering to the respective span via the onboundary events charIndex property.
-* This function should be called once on the initial pageload and whenever the text changes.
-*/
-function articulateTextChanged(doc) {
-  var counter = 0;
-  var elements = $(doc).find("#cr-content-container").find("p, h1, h2, h3, h4, h5, h6");
-  $(elements).each(function(index, elem){
-    $(this).attr("id", "elem-"+index);
-
-    elem = $(elem).html();
-    var text = elem.replace(/<[^>]*>/g, "");
-    text = text.split(" ");
-    var wrappedText = [];
-    for (i = 0; i < text.length; i++) {
-      var word = text[i].trim();
-      var inc = word.length + 1;
-
-      var element_name = $(this).prop("tagName");
-      if (i == text.length - 1) {
-        if (element_name == "H1" || element_name == "H2" || element_name == "H3" || element_name == "H4" || element_name == "H5" || element_name == "H6") {
-          if (word.includes(".") == false ) {
-            word = word+".";
-          }
-        }
-      }
-
-      word = "<span data-count='" + counter + "'>" + word + "</span>";
-      counter += inc;
-      wrappedText.push(word);
-    }
-    wrappedText = wrappedText.join(" ");
-    $(doc).find("#elem-"+index).html(wrappedText);
-  });
-}
-
-//Remove artificial/helper dots
-function articulateReset(doc) {
-  var counter = 0;
-  var elements = $(doc).find("#cr-content-container").find("p, h1, h2, h3, h4, h5, h6");
-  $(elements).each(function(index, elem){
-    $(this).attr("id", "elem-"+index);
-
-    elem = $(elem).html();
-    var text = elem.replace(/<[^>]*>/g, "");
-    text = text.split(" ");
-    var wrappedText = [];
-    for (i = 0; i < text.length; i++) {
-      var word = text[i].trim();
-      var inc = word.length + 1;
-
-      var element_name = $(this).prop("tagName");
-      if (i == text.length - 1) {
-        if (element_name == "H1" || element_name == "H2" || element_name == "H3" || element_name == "H4" || element_name == "H5" || element_name == "H6") {
-          if (word.includes(".") == true ) {
-            word = word.replace(".","");
-          }
-        }
-      }
-
-      word = "<span data-count='" + counter + "'>" + word + "</span>";
-      counter += inc;
-      wrappedText.push(word);
-    }
-    wrappedText = wrappedText.join(" ");
-    $(doc).find("#elem-"+index).html(wrappedText);
-  });
 }
 
 //Get status from checkbox
@@ -987,36 +898,19 @@ function pullSettings(doc){
       cr_background_color_light = settings.cr_background_color_light;
       cr_text_color_light = settings.cr_text_color_light;
       cr_link_color_light = settings.cr_link_color_light;
-      cr_highlighter_color_light = settings.cr_highlighter_color_light;
       cr_background_color_dark = settings.cr_background_color_dark;
       cr_text_color_dark = settings.cr_text_color_dark;
-      cr_link_color_dark = settings.cr_link_color_dark;
-      cr_highlighter_color_dark = settings.cr_highlighter_color_dark;
       cr_background_color = settings.cr_background_color;
       cr_text_color = settings.cr_text_color;
       cr_link_color = settings.cr_link_color;
-      cr_highlighter_color = settings.cr_highlighter_color;
       cr_theme = settings.cr_theme;
       cr_dark_panel = settings.cr_dark_panel;
       cr_display_footer = settings.cr_display_footer;
-      cr_scroll_speed = settings.cr_scroll_speed;
       cr_display_outline = settings.cr_display_outline;
       cr_display_images = settings.cr_display_images;
-      cr_display_notes = settings.cr_display_notes;
       cr_display_meta = settings.cr_display_meta;
       cr_display_author = settings.cr_display_author;
       cr_display_reading_time = settings.cr_display_reading_time;
-      cr_display_saved_info = settings.cr_display_saved_info;
-      cr_display_ruler = settings.cr_display_ruler;
-      cr_ruler_color = settings.cr_ruler_color;
-      cr_ruler_height = settings.cr_ruler_height;
-      cr_ruler_position = settings.cr_ruler_position;
-      cr_auto_run_rules = settings.cr_auto_run_rules;
-      cr_translate_to = settings.cr_translate_to;
-      cr_articulate_voice = settings.cr_articulate_voice;
-      cr_articulate_rate = settings.cr_articulate_rate;
-      cr_articulate_pitch = settings.cr_articulate_pitch;
-      cr_articulate_volume = settings.cr_articulate_volume;
 
       setFontFamily(doc, settings.cr_font_family, true);
       setFontSize(doc, settings.cr_font_size, true);
@@ -1073,15 +967,12 @@ function pushSettings(doc){
     cr_background_color_light: cr_background_color_light,
     cr_text_color_light: cr_text_color_light,
     cr_link_color_light: cr_link_color_light,
-    cr_highlighter_color_light: cr_highlighter_color_light,
     cr_background_color_dark: cr_background_color_dark,
     cr_text_color_dark: cr_text_color_dark,
     cr_link_color_dark: cr_link_color_dark,
-    cr_highlighter_color_dark: cr_highlighter_color_dark,
     cr_background_color: cr_background_color,
     cr_text_color: cr_text_color,
     cr_link_color: cr_link_color,
-    cr_highlighter_color: cr_highlighter_color,
     cr_theme: cr_theme,
     cr_dark_panel: cr_dark_panel,
     cr_display_footer: cr_display_footer,
@@ -1093,16 +984,7 @@ function pushSettings(doc){
     cr_display_author: cr_display_author,
     cr_display_reading_time: cr_display_reading_time,
     cr_display_saved_info: cr_display_saved_info,
-    cr_display_ruler: cr_display_ruler,
-    cr_ruler_color: cr_ruler_color,
-    cr_ruler_height: cr_ruler_height,
-    cr_ruler_position: cr_ruler_position,
     cr_auto_run_rules: cr_auto_run_rules,
-    cr_translate_to: cr_translate_to,
-    cr_articulate_voice: cr_articulate_voice,
-    cr_articulate_rate: cr_articulate_rate,
-    cr_articulate_pitch: cr_articulate_pitch,
-    cr_articulate_volume: cr_articulate_volume
   }
 
   chrome.runtime.sendMessage({query: "push-settings", user: current_user, app_setting: app_setting}, function(response) {
@@ -1153,33 +1035,7 @@ function syncStyles() {
     }
   });
 }
-function syncThemes() {
-  settings = {
-    theme: cr_theme,
-    background_color: cr_background_color,
-    background_color_light: cr_background_color_light,
-    background_color_dark: cr_background_color_dark,
-    text_color: cr_text_color,
-    text_color_light: cr_text_color_light,
-    text_color_dark: cr_text_color_dark,
-    link_color: cr_link_color,
-    link_color_light: cr_link_color_light,
-    link_color_dark: cr_link_color_dark,
-    highlighter_color: cr_highlighter_color,
-    highlighter_color_light: cr_highlighter_color_light,
-    highlighter_color_dark: cr_highlighter_color_dark
-  }
 
-  chrome.runtime.sendMessage({query: "update-themes", user: current_user, settings: settings}, function(response) {
-    if (response.data.status == 200) {
-      //alert(`Settings have been successfully synced`);
-    } else if (response.data.status == 404) {
-      //alert("Oppss...Either there's no internet connection or our servers are offline");
-    }  else {
-      //alert("Oppss...Something wrong. Please try again later");
-    }
-  });
-}
 function syncReaderComponents() {
   settings = {
     dark_panel: cr_auto_dark_panel,
