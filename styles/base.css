@@ -1,0 +1,73 @@
+/***** Match exact css when printing *****/
+*{ color-adjust: exact; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/***** OpenDyslexic Fonts *****/
+@font-face{font-family:OpenDyslexic;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/OpenDyslexic/OpenDyslexic-Regular.otf);font-style:normal;font-weight:400}@font-face{font-family:OpenDyslexic-Italic;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/OpenDyslexic/OpenDyslexic-Italic.otf);font-style:italic;font-weight:400}@font-face{font-family:OpenDyslexic-Bold;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/OpenDyslexic/OpenDyslexic-Bold.otf);font-weight:700;font-style:normal}@font-face{font-family:OpenDyslexic-BoldItalic;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/OpenDyslexic/OpenDyslexic-BoldItalic.otf);font-weight:700;font-style:italic}@font-face{font-family:OpenDyslexic-Mono;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/OpenDyslexic/OpenDyslexicMono-Regular.otf);font-weight:400;font-style:normal}
+
+/***** Maetrial Icons Font *****/
+@font-face{font-family:"Material Icons";font-style:normal;font-weight:400;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/MaterialIcons/MaterialIcons-Regular.eot);src:local("Material Icons"),local("MaterialIcons-Regular"),url(chrome-extension://__MSG_@@extension_id__/assets/fonts/MaterialIcons/MaterialIcons-Regular.woff2) format("woff2"),url(chrome-extension://__MSG_@@extension_id__/assets/fonts/MaterialIcons/MaterialIcons-Regular.woff) format("woff"),url(chrome-extension://__MSG_@@extension_id__/assets/fonts/MaterialIcons/MaterialIcons-Regular.ttf) format("truetype")}
+.material-icons{font-family:"Material Icons";font-weight:400;font-style:normal;font-size:20px;line-height:1;text-transform:none;letter-spacing:normal;word-wrap:normal;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"liga"}
+
+/***** Lora Fonts *****/
+@font-face{font-family:Lora;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lora/Lora-Regular.ttf);font-style:normal;font-weight:normal}@font-face{font-family:Lora-Italic;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lora/Lora-Italic.ttf);font-style:italic;font-weight:normal}@font-face{font-family:Lora-Bold;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lora/Lora-Bold.ttf);font-weight:normal;font-style:normal}@font-face{font-family:Lora-BoldItalic;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lora/Lora-BoldItalic.ttf);font-weight:normal;font-style:italic}
+
+/***** Lexend Fonts *****/
+@font-face{font-family:LexendDeca;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendDeca.ttf);font-style:normal;font-weight:normal}@font-face{font-family:LexendExa;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendExa.ttf);font-style:normal;font-weight:normal}@font-face{font-family:LexendGiga;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendGiga.ttf);font-weight:normal;font-style:normal}@font-face{font-family:LexendMega;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendMega.ttf);font-weight:normal;font-style:normal}@font-face{font-family:LexendPeta;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendPeta.ttf);font-weight:normal;font-style:normal}@font-face{font-family:LexendTera;src:url(chrome-extension://__MSG_@@extension_id__/assets/fonts/Lexend/LexendZetta.ttf);font-weight:normal;font-style:normal}
+
+/***** Truncate words *****/
+.truncated{
+  display: inline-block;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/***** Clipboard Tooltip *****/
+.btn-clipboard-copied{
+  position: absolute;
+  top: -22px;
+  right: -20px;
+  background: #000 !important;
+  color: #fff !important;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+}
+
+/***** Tooltip *****/
+.tlite{background:#111;color:#fff;font-family:sans-serif;font-size:.8rem;font-weight:400;text-decoration:none;text-align:left;padding:.6em .75rem;border-radius:4px;position:absolute;opacity:0;visibility:hidden;transition:opacity .4s;white-space:nowrap;box-shadow:0 .5rem 1rem -.5rem #000;z-index:1000;-webkit-backface-visibility:hidden}.tlite-table td,.tlite-table th{position:relative}.tlite-visible{visibility:visible;opacity:.9}.tlite::before{content:' ';display:block;background:inherit;width:10px;height:10px;position:absolute;transform:rotate(45deg)}.tlite-n::before{top:-3px;left:50%;margin-left:-5px}.tlite-nw::before{top:-3px;left:10px}.tlite-ne::before{top:-3px;right:10px}.tlite-s::before{bottom:-3px;left:50%;margin-left:-5px}.tlite-se::before{bottom:-3px;right:10px}.tlite-sw::before{bottom:-3px;left:10px}.tlite-w::before{left:-3px;top:50%;margin-top:-5px}.tlite-e::before{right:-3px;top:50%;margin-top:-5px}
+
+/***** Message Popup *****/
+#cr-message{font-family:"Helvetica Neue",Helvetica,Verdana,Arial,sans-serif!important;position:fixed!important;top:0!important;left:0!important;right:0!important;padding:20px!important;background:#333!important;color:#fff!important;text-align:center!important;font-size:16px!important;z-index:1100007!important}
+
+/***** Hide elements *****/
+#cr-iframe .hidden{display: none;}
+
+/***** Pre tags for codes *****/
+#cr-content-container pre{
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+/***** Max-width for all elements *****/
+#cr-content-container *{
+  max-width: 100%;
+}
+
+/***** Hide elements for printing *****/
+@media print{
+  #cr-body .no-print{
+    display:none !important;
+  }
+}

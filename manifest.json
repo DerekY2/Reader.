@@ -1,0 +1,60 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "manifest_version": 3,
+
+  "name": "Reader.",
+  
+  "short_name": "Reader.",
+
+  "version": "0.0.1",
+  
+  "description": "Reading Mode for Chrome",
+
+  
+  "icons": {
+    "16": "assets/images/icon16.png",
+    "48": "assets/images/icon48.png",
+    "128": "assets/images/icon128.png"
+  },
+
+  "permissions": [ "tabs", "activeTab", "contextMenus", "storage", "scripting" ],
+
+  "content_security_policy": {
+    "sandbox": "sandbox allow-scripts; 'unsafe-inline' 'self'"
+  },
+
+  "host_permissions": ["<all_urls>"],
+    
+  
+
+  "action": {
+    "default_title": "Reader.",
+    "default_icon": "assets/images/icon128.png"
+  },
+  
+  "background": {
+    "service_worker": "javascripts/background.js"
+  },
+
+  "web_accessible_resources": [{
+    "resources": [
+      "*.html",
+      "assets/*",
+      "javascripts/*",
+      "styles/*"
+    ],
+    "matches": ["<all_urls>"]
+  }],
+
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "chromeos": "Ctrl+Shift+Z",
+        "linux": "Ctrl+Shift+Z",
+        "mac": "Ctrl+Shift+Z",
+        "windows": "Ctrl+Shift+Z"
+      }
+    }
+  }
+}

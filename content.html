@@ -1,0 +1,299 @@
+<div id="cr-body" style="display: none;position:relative;">
+  <!-- Outline -->
+  <div id="cr-outline" class="cr-sidebar-section no-print">
+    <h3>OUTLINE</h3>
+    <ul id="cr-outline-list">
+    </ul>
+  </div>
+
+  <div id="cr-container">
+    <!-- Saved notice -->
+    <div id="cr-saved-notice" style="display:none;">
+      <i class='fas fa-check-circle m-r-3'></i> Saved
+    </div>
+
+
+    <!-- Main Menu -->
+    <ul id="options-menu" class="no-print">
+      <li>
+        <a href="#/" id="options-close" class="tooltip" title="Close">
+          <i class="material-icons">close</i>
+        </a>
+      </li>
+      <li>
+        <a href="#/" id="options-fullscreen" class="tooltip" title="Fullscreen">
+          <i class="material-icons enter">fullscreen</i>
+          <i class="material-icons exit" style="display: none;">fullscreen_exit</i>
+        </a>
+      </li>
+      
+      <li>
+        <a href="#/" id="options-print" class="tooltip" title="Print">
+          <i class="material-icons">print</i>
+        </a>
+      </li>
+      
+      <li>
+        <a href="#/" id="options-main-panel-toggle" data-panel="options-main-panel" class="tooltip" title="Settings">
+          <i class="material-icons">tune</i>
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- Main Panel -->
+    <div id="options-main-panel" class="options-panel no-print" style="display:none;">
+      <button class="options-panel-header active"><i class="fas fa-font"></i> &nbsp;STYLE <i class="fas fa-chevron-down marker"></i></button>
+      <div class="options-panel-content active">
+        <!--<label class="label-header">BASICS</label>-->
+
+        <div id="options-font-family" class="options-panel-content-section">
+          <label class="float-left">Font Style</label>
+          <select class="float-right">
+            <option value="Arial">Arial</option>
+            <option value="Arial Black">Arial Black</option>
+            <option value="Athelas">Athelas</option>
+            <option value="Comic Sans">Comic Sans</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+            <option value="Constantia">Constantia</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Courier">Courier</option>
+            <option value="Didot">Didot</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Gill Sans">Gill Sans</option>
+            <option value="Impact">Impact</option>
+            <option value="Iowan Old Style">Iowan Old Style</option>
+            <option value="Palatino">Palatino</option>
+            <option value="Optima">Optima</option>
+            <option value="sans-serif">Sans-serif</option>
+            <option value="Seravek">Seravek</option>
+            <option value="Serif">Serif</option>
+            <option value="Sitka Text">Sitka Text</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Trebuchet MS">Trebuchet MS</option>
+            <option value="OpenDyslexic">OpenDyslexic</option>
+            <option value="OpenDyslexic-Mono">OpenDyslexic Mono</option>
+            <option value="OpenDyslexic-Bold">OpenDyslexic Bold</option>
+            <option value="OpenDyslexic-Italic">OpenDyslexic Italic</option>
+            <option value="OpenDyslexic-BoldItalic">OpenDyslexic BoldItalic</option>
+            <option value="LexendDeca">LexendDeca</option>
+            <option value="LexendExa">Lexend Exa</option>
+            <option value="LexendGiga">Lexend Giga</option>
+            <option value="LexendMega">Lexend Mega</option>
+            <option value="LexendPeta">Lexend Peta</option>
+            <option value="LexendTera">Lexend Tera</option>
+            <option value="LexendZetta">Lexend Zetta</option>
+            <option value="Lora">Lora</option>
+            <option value="Lora-Bold">Lora Bold</option>
+            <option value="Lora-Italic">Lora Italic</option>
+            <option value="Lora-BoldItalic">Lora BoldItalic</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+
+        <div class="options-panel-content-section options-with-slider">
+          <div id="options-max-width" class="section-split section-split-left">
+            <label class="float-left label-inline-block m-t-18i">Width</label>
+            <div class="input-label input-label-px float-right">
+              <input type="number" class="val" value="680" autocomplete="off"   />
+            </div>
+          </div>
+          <div id="options-font-size" class="section-split section-split-right">
+            <label class="float-left">Font<br/>Size</label>
+            <div class="input-label input-label-px float-right">
+              <input type="number" class="val" value="14" autocomplete="off"  />
+            </div>
+          </div>
+        </div>
+
+        <div class="options-panel-content-section options-with-slider">
+          <div id="options-line-height" class="section-split section-split-left">
+            <label class="float-left">Line<br/>Height</label>
+            <div class="input-label input-label-em float-right">
+              <input type="number" class="val" value="1.84" autocomplete="offf"  />
+            </div>
+          </div>
+          <div id="options-letter-space" class="section-split section-split-right">
+            <label class="float-left">Letter<br/>Space</label>
+            <div class="input-label input-label-px float-right">
+              <input type="number" class="val" value="0" autocomplete="offf"  />
+            </div>
+          </div>
+        </div>
+        <button name="save-options-style" class="btn btn-save-changes m-t-20">Save changes</button>
+      </div>
+
+      <button class="options-panel-header"><i class="fas fa-swatchbook"></i> &nbsp;THEMES <i class="fas fa-chevron-down marker"></i></button>
+      <div class="options-panel-content">
+        <div id="options-theme" class="options-panel-content-section m-t-10">
+          <label>Theme</label>
+          <ul>
+            <li>
+              <a href="#/" class="options-theme-light" data-theme="cr-theme-light"></a>
+              <span class="label">Light</span>
+            </li>
+            <li>
+              <a href="#/" class="options-theme-dark" data-theme="cr-theme-dark"></a>
+              <span class="label">Dark</span>
+            </li>
+            <li>
+              <a href="#/" class="options-theme-custom active" data-theme="cr-theme-custom"></a>
+              <span class="label">Custom</span>
+            </li>
+          </ul>
+        </div>
+
+        <div id="options-background-color" class="options-panel-content-section">
+          <label class="float-left">Background Color</label>
+
+          <div class="input-group color-picker">
+            <label class="color"><input type="color" value="#F8F1E3" ></label>
+            <input type="text" class="color" name="background_color" value="#F8F1E3" spellcheck="false" autocomplete="off" />
+          </div>
+        </div>
+
+        <div id="options-text-color" class="options-panel-content-section">
+          <label class="float-left">Text Color</label>
+
+          <div class="input-group color-picker">
+            <label class="color"><input type="color" value="#333333" ></label>
+            <input type="text" class="color" name="text_color" value="#333333" spellcheck="false" autocomplete="off" />
+          </div>
+        </div>
+
+        <div id="options-link-color" class="options-panel-content-section">
+          <label class="float-left">Link Color</label>
+
+          <div class="input-group color-picker">
+            <label class="color"><input type="color" value="#5F6368" ></label>
+            <input type="text" class="color" name="link_color" value="#5F6368" spellcheck="false" autocomplete="off" />
+          </div>
+        </div>
+        <button name="save-options-themes" class="btn btn-save-changes m-t-10">Save changes</button>
+      </div>
+
+      <button class="options-panel-header"><i class="fas fa-columns"></i> &nbsp;Options <i class="fas fa-chevron-down marker"></i></button>
+      <div class="options-panel-content">
+        <div id="options-dark-panel" class="options-panel-content-section">
+          <label class="float-left">Dark Panel</label>
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_dark_panel" name="dark_panel" class="switch-input">
+            <label for="cr_dark_panel" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
+          </div>
+        </div>
+
+
+        <div id="options-display-footer" class="options-panel-content-section">
+          <label class="float-left">Remove Footer</label>
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_footer" name="footer" class="switch-input">
+            <label for="cr_display_footer" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
+          </div>
+        </div>
+
+        <div id="options-display-outline" class="options-panel-content-section">
+          <label class="float-left">Outline</label>
+
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_outline" name="outline" class="switch-input">
+            <label for="cr_display_outline" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+          </div>
+        </div>
+
+        <div id="options-display-images" class="options-panel-content-section">
+          <label class="float-left">Images</label>
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_images" name="display_images" class="switch-input">
+            <label for="cr_display_images" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+          </div>
+        </div>
+
+        <div id="options-display-meta" class="options-panel-content-section">
+          <label class="float-left">Meta</label>
+
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_meta" name="display_meta" class="switch-input">
+            <label for="cr_display_meta" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+          </div>
+        </div>
+
+        <div id="options-display-author" class="options-panel-content-section">
+          <label class="float-left">Author</label>
+
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_author" name="display_author" class="switch-input">
+            <label for="cr_display_author" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+          </div>
+        </div>
+
+        <div id="options-display-reading-time" class="options-panel-content-section">
+          <label class="float-left">Reading Time</label>
+
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_display_reading_time" name="display_reading_time" class="switch-input">
+            <label for="cr_display_reading_time" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+          </div>
+        </div>
+        <button name="save-options-reader-components" class="btn btn-save-changes">Save changes</button>
+      </div>
+    </div>
+
+    
+
+    <!-- Meta -->
+    <ul id="cr-meta" style="display: none">
+    </ul>
+
+    <!-- Main Content -->
+    <div id="cr-content-container">
+      <div id="cr-content-wrapper">
+        <h1 id="cr-title"></h1>
+        <div id="cr-content"></div>
+      </div>
+
+      <div id="cr-ruler" class="no-print" style="display:none"></div>
+
+      <div id="cr-toolbar">
+        <ul class="crt-left">
+          
+        </ul>
+        <ul class="crt-right">
+          <li>
+            <a href="#/" id="cr-toolbar-search">
+              <i class="material-icons">search</i>
+            </a>
+          </li>
+          <li>
+            <a href="#/" id="cr-toolbar-translate">
+              <i class="material-icons">g_translate</i>
+            </a>
+          </li>
+        </ul>
+        
+      </div>
+
+
+    <!-- Footer -->
+    <div id="cr-footer">
+      <p>Generated with <a href="https://youtu.be/BbeeuzU5Qc8" target="_blank" class="cr-footer-brand">Reader.</a></p>
+      <ul class="no-print">
+        <li>
+          <a href="https://youtu.be/BbeeuzU5Qc8" target="_blank"><i class="fas fa-comments"></i>Feedback</a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!--
+<script type="text/javascript">
+  (function() {
+    // Tlite
+    function tlite(t){document.addEventListener("mouseover",function(e){var i=e.target,n=t(i);n||(n=(i=i.parentElement)&&t(i)),n&&tlite.show(i,n,!0)})}tlite.show=function(t,e,i){var n="data-tlite";e=e||{},(t.tooltip||function(t,e){function o(){tlite.hide(t,!0)}function l(){r||(r=function(t,e,i){function n(){o.className="tlite tlite-"+r+s;var e=t.offsetTop,i=t.offsetLeft;o.offsetParent===t&&(e=i=0);var n=t.offsetWidth,l=t.offsetHeight,d=o.offsetHeight,f=o.offsetWidth,a=i+n/2;o.style.top=("s"===r?e-d-10:"n"===r?e+l+10:e+l/2-d/2)+"px",o.style.left=("w"===s?i:"e"===s?i+n-f:"w"===r?i+n+10:"e"===r?i-f-10:a-f/2)+"px"}var o=document.createElement("span"),l=i.grav||t.getAttribute("data-tlite")||"n";o.innerHTML=e,t.appendChild(o);var r=l[0]||"",s=l[1]||"";n();var d=o.getBoundingClientRect();return"s"===r&&d.top<0?(r="n",n()):"n"===r&&d.bottom>window.innerHeight?(r="s",n()):"e"===r&&d.left<0?(r="w",n()):"w"===r&&d.right>window.innerWidth&&(r="e",n()),o.className+=" tlite-visible",o}(t,d,e))}var r,s,d;return t.addEventListener("mousedown",o),t.addEventListener("mouseleave",o),t.tooltip={show:function(){d=t.title||t.getAttribute(n)||d,t.title="",t.setAttribute(n,""),d&&!s&&(s=setTimeout(l,i?150:1))},hide:function(t){if(i===t){s=clearTimeout(s);var e=r&&r.parentNode;e&&e.removeChild(r),r=void 0}}}}(t,e)).show()},tlite.hide=function(t,e){t.tooltip&&t.tooltip.hide(e)},"undefined"!=typeof module&&module.exports&&(module.exports=tlite);
+
+    function classWhen(t){var n=(t.className||"").split(" ");return function(t,o){return~n.indexOf(t)&&o}}tlite(function(t){var o=classWhen(t);return o("tooltip",{grav:"s"})||o("tooltip-n",{grav:"n"})||o("tooltip-s",{grav:"s"})||o("tooltip-w",{grav:"w"})||o("tooltip-e",{grav:"e"})||o("tooltip-se",{grav:"se"})||o("tooltip-ne",{grav:"ne"})||o("tooltip-sw",{grav:"sw"})||o("tooltip-nw",{grav:"nw"})});
+    tlite(function (el) { return el.className === 'tooltip' });
+  })();
+</script>
+-->
