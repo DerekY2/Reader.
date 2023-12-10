@@ -43,16 +43,6 @@
       "styles/*"
     ],
     "matches": ["<all_urls>"]
-  }],
+  }]
 
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "chromeos": "Ctrl+Shift+Z",
-        "linux": "Ctrl+Shift+Z",
-        "mac": "Ctrl+Shift+Z",
-        "windows": "Ctrl+Shift+Z"
-      }
-    }
-  }
 }
