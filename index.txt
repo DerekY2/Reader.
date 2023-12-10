@@ -1,0 +1,136 @@
+background.js
+
+    b = startReader
+    e = init
+    f = tab
+    a = linkCimId
+
+
+content.js
+
+    h = title
+    u = excerpt
+    n = content
+    o = article_url
+    d = author
+    a = reading_time
+    b = tag_list
+    l - lastLogTime
+
+    r = cr_theme
+    q = cr_font_family
+    m = cr_font_size
+    w = cr_line_height
+    t = cr_letter_space
+    y = cr_max_width
+
+    cx = cr_default_css
+    tw = cr_background_color_light
+    eq = cr_text_color_light
+    sl = cr_link_color_light
+    mn = cr_background_color_dark
+    iu = default_background_color_dark
+    xv = default_background_color_light
+    k = cr_text_color_dark
+    z = cr_link_color_dark
+    j = cr_background_color
+    to = cr_text_color
+    ta = cr_link_color
+    eu = cr_dark_panel
+    ew = cr_display_footer
+    er = cr_display_outline
+    et = cr_display_images
+    ey = cr_display_meta
+    rq = cr_display_author
+    rw = cr_display_reading_time
+    sp = scrolling
+    gn = start_btn
+    fh = stop_btn
+    le = last_element
+    fd = cr-theme-light --> /js/html
+    ty = cr-theme-dark --> /js/html
+    hm = cr-theme-custom --> /js/html
+    xc = doc
+    bj = theme
+    tr = save
+    ax = status
+    tb = translate_url
+    qp = translate_to_language
+    pn = panel
+    cu = selection
+    cg = selectedContent
+    ch = range
+
+    css:
+
+    meta-data = cr-meta
+    rh = cr-h
+    reader-content = cr-content
+    lr = options-manual-scroll // deleted
+    cz = options-scroll-speed // deleted
+    hf = cr-toolbar
+    ca = options-font-family
+    cq = options-font-size
+    cw = options-line-height
+
+
+    f() = initiateCurrentUser()
+    g() = getParsedArticle()
+    at() = setHeadingsForOutline()
+    bs() = setOutline()
+    cs() = addStyleTags()
+    dx(c) = getCheckboxStatus(checkbox)
+    eg() = startStopScrolling()
+    ho() = optionsManualScroll()
+    i() = deleted_elements() // deleted
+    jx() = startDeleteElement()
+    kg() = optionsColorPicker()
+    lt() = readingTime()
+    mx() = shareTwitter()
+    nx() = showToolbar()
+    oq() = toolbarNoteFormToggle()
+    px() = toolbarActionsHandler()
+    qx() = optionsAccordian()
+    rx() = searchText()
+    sx() = getBrowserLanguage()
+    tx() = translateText()
+    uv() = popupwindow()
+    vx() = saveStorageValue()
+    wx() = setLineHeight()
+    xt() = setFontSize()
+    yz() = setLetterSpace()
+    zx() = setFontFamily()
+    ad() = setMaxWidth()
+    wc() = setBackgroundColor()
+    gf() = setTextColor()
+    pl() = setLinkColor()
+    aq() = setTheme()
+    az() = setDisplayOutline()
+    aw() = setDisplayImages()
+    ae() = setDisplayMeta()
+    ac() = setDisplayAuthor()
+    av() = setDisplayReadingTime()
+    iq() = setDarkPanel()
+    ab() = setDisplayFooter()
+    an() = setDefaultCss()
+    bw() = optionsDefaultSettings()
+    ay() = optionsMenu()
+    bv() = optionsPanelCloseHandler()
+    bf() = optionsStyle()
+    ao() = getActiveTheme()
+    au() = optionsTheme()
+    ar() = optionsReaderComponents()
+    bt() = init()
+    lj() = launch()
+    ct() = undoDeletedElement()
+    cy() = toolbarDisplayToggle()
+    cj() = getHTMLOfSelection()
+    ck() = trimContent()
+    co() = slugify()
+    
+
+
+    loadingScreen = preloader
+    getLoadingScreen = getPreloader
+
+    f = iframe

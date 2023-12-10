@@ -18,37 +18,7 @@ function startReaderMode(tab) {
   );
 }
 
-// Open login modal
-function openLoginModal (tab) {
-  setTimeout(function() {
-    chrome.scripting.executeScript(
-      {
-        target: {tabId: tab.id, allFrames: true},
-        files: [
-          "javascripts/jquery-3.4.1.min.js",
-          //"javascripts/login.js"
-        ]
-      }
-    );
-  }, 1000);
-}
 
-// Open activation modal
-function openActivationModal (tab) {
-  setTimeout(function() {
-    chrome.scripting.executeScript(
-      {
-        target: {tabId: tab.id, allFrames: true},
-        files: [
-          "javascripts/jquery-3.4.1.min.js",
-          //"javascripts/activation.js"
-        ]
-      }
-    );
-  }, 1000);
-}
-
-// Proxy for opening Reader/Login/Activation
 function init(tab) {
   startReaderMode(tab);
 }
@@ -76,7 +46,7 @@ chrome.contextMenus.onClicked.addListener(function (clickData) {
   if(clickData.menuItemId == "view-selection") {
     chrome.tabs.query({ active: true }, function(tabs) {
       let tab = tabs[0];
-      startReaderMode(tab);
+      startReader(tab);
     });
   } else if(clickData.menuItemId == "view-linked-page" && clickData.linkUrl) {
     chrome.tabs.create(

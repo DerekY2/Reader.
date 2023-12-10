@@ -1,23 +1,6 @@
-//server = "http://127.0.0.1:3000";
-server = "https://readermode.io";
-
-var current_user = {};
-var app_setting_updated_at;
-var article;
-var title;
-var excerpt;
-var content;
-var article_url;
-var cloud_article_url;
-var author;
-var reading_time;
-var folder;
-var tag_list;
-var lastLogTime;
-
+var title, excerpt, content,article_url,author,reading_time,tag_list, lastLogTime;
 
 // Settings
-var settings_synced = false;
 var cr_theme = "cr-theme-custom";
 var cr_font_family = "Arial";
 var cr_font_size = 16;
@@ -123,7 +106,6 @@ var cr_dark_panel = "on";
 var cr_display_footer = "off";
 var cr_display_outline = "off";
 var cr_display_images = "on";
-var cr_display_notes = "on";
 var cr_display_meta = "on";
 var cr_display_author = "on";
 var cr_display_reading_time = "on";
@@ -262,21 +244,6 @@ function outlineDisplayToggle(doc) {
   });
 }
 
-// Initiate current user
-function initiateCurrentUser(){
-  setTimeout(function(){
-    chrome.storage.local.get(['cr_user'], function(result) {
-      if (result.cr_user) {
-        user = result.cr_user;
-        current_user.id = user.id;
-        current_user.name = user.name;
-        current_user.email = user.email;
-        current_user.hash_id = user.hash_id;
-        current_user.app_setting_existed = user.app_setting_existed;
-      }
-    });
-  }, 1000);
-}
 
 // Return preloader html
 function getPreloader(){
@@ -730,16 +697,6 @@ function searchText(text) {
   popupwindow(search_url + encodeURIComponent(text), 'Search', 900, 540);
 }
 
-/*** Google Translate ***/
-function getBrowserLanguage() {
-  let language = navigator.language || navigator.userLanguage || function (){
-    const languages = navigator.languages;
-    if (navigator.languages.length > 0){
-      return navigator.languages[0];
-    }
-  }() || 'en';
-  return language.split('-')[0];
-}
 function translateText(doc, text) {
   var translate_url = 'https://translate.google.com/#auto/';
   var translate_to_language = $(doc).find("#options-translate-to select").find(":selected").val();
@@ -763,311 +720,11 @@ function popupwindow(url, title, w, h) {
   );
 }
 
-function notePanelReset(doc){
-  var note_panel = $(doc).find("#note-panel");
-  var note = $(note_panel).find(".note");
-  var edit_btn = $(note_panel).find("button.edit");
-  var cancel_btn = $(note_panel).find("button.cancel");
-  var update_btn = $(note_panel).find("button.update");
-
-  $(note).html("");
-  $(note).attr('contenteditable','false');
-  $(note).attr("readonly", true);
-  $(edit_btn).show();
-  $(cancel_btn).hide();
-  $(update_btn).hide();
-}
-
-function notesToggle(doc, data_note_id){
-  if (data_note_id) {
-    /*
-    elem = $(doc).find("#"+id);
-    notePanel(doc, elem);
-    */
-    elems = $(doc).find(`span[data-note-id=${data_note_id}]`);
-    $(elems).each(function(){
-      elem = $(this);
-      notePanel(doc, elem);
-    });
-  } else {
-    elems = $(doc).find(".cr-note-wrapper");
-    $(elems).each(function(){
-      elem = $(this);
-      notePanel(doc, elem);
-    });
-  }
-}
-
-/*
-* Keep these 2 vars outside
-*  Otherwhise, will have problem with deleting elements
-*/
-var note_panel;
-var note;
-var note_wrapper;
-var original_note;
-function notePanel(doc, elem) {
-
-  $(elem).click(function(e){
-    e.preventDefault();
-
-    note_wrapper = $(e.target);
-    data_note_id = $(note_wrapper).attr("data-note-id");
-    original_note = $(this).attr("title");
-
-    note_panel = $(doc).find("#note-panel");
-    note = $(doc).find("#note-panel-textarea");
-
-    if ( $(note_panel).is(":hidden") ) {
-      $(note).val(original_note);
-      $(note_panel).css({
-        display: "block",
-        position: "absolute",
-        left: ($(this).offset().right + $(this).width()) + "px",
-        top: $(this).offset().top + "px"
-      });
-
-      var close_btn = $(note_panel).find(".btn-close");
-      var update_btn = $(note_panel).find("button.update");
-      var delete_btn = $(note_panel).find("button.delete");
-      $(close_btn).click(function(){
-        $(note_panel).hide();
-        $(note).html("");
-      });
-      $(update_btn).click(function(){
-        //span = $(this).find("span");
-        $(update_btn).html("<span><i class='far fa-check-circle' style='color: #2cbc63'></i>Updated!</span>");
-
-        setTimeout(function(){
-          $(update_btn).find("span").fadeOut();
-          $(update_btn).html("<span><i class='far fa-save'></i>Update</span>");
-        }, 500);
-
-        new_note = $(note).val();
-        $(doc).find(`span[data-note-id=${data_note_id}]`).each(function(){
-          $(this).attr("title", new_note);
-        });
-        
-      });
-      $(delete_btn).click(function(){
-        //var result = confirm("Are you sure you want to delete this?");
-        //if (result == true) {
-          $(note_panel).hide();
-          $(note).html("");
-
-          $(doc).find(`span[data-note-id=${data_note_id}]`).each(function(){
-            $(this).replaceWith($(this).html());
-          });
-
-         
-        //}
-      });
-    } else {
-      $(note_panel).hide();
-      $(note).html("");
-    }
-  });
-
-}
-
-// Get encoded current url
-function getEncodedCurrentURL(){
-  var current_url = window.location.href;
-  var encodedURL = btoa(current_url);
-
-  return encodedURL;
-}
-
 // Save setting's value to storage
 function saveStorageValue(storage, val) {
   chrome.storage.sync.set({[storage]: val});
 }
 
-// Pull settings from server
-function pullSettings(doc){
-  chrome.runtime.sendMessage({query: "pull-settings", user: current_user}, function(response) {
-    if (response.data.status == 200) {
-      settings = response.data.settings;
-      cr_theme = settings.cr_theme;
-      cr_font_family = settings.cr_font_family;
-      cr_font_size = settings.cr_font_size;
-      cr_line_height = settings.cr_line_height;
-      cr_letter_space = settings.cr_letter_space;
-      cr_max_width = settings.cr_max_width;
-      cr_default_css = settings.cr_default_css;
-      cr_background_color_light = settings.cr_background_color_light;
-      cr_text_color_light = settings.cr_text_color_light;
-      cr_link_color_light = settings.cr_link_color_light;
-      cr_background_color_dark = settings.cr_background_color_dark;
-      cr_text_color_dark = settings.cr_text_color_dark;
-      cr_background_color = settings.cr_background_color;
-      cr_text_color = settings.cr_text_color;
-      cr_link_color = settings.cr_link_color;
-      cr_theme = settings.cr_theme;
-      cr_dark_panel = settings.cr_dark_panel;
-      cr_display_footer = settings.cr_display_footer;
-      cr_display_outline = settings.cr_display_outline;
-      cr_display_images = settings.cr_display_images;
-      cr_display_meta = settings.cr_display_meta;
-      cr_display_author = settings.cr_display_author;
-      cr_display_reading_time = settings.cr_display_reading_time;
-
-      setFontFamily(doc, settings.cr_font_family, true);
-      setFontSize(doc, settings.cr_font_size, true);
-      setLineHeight(doc, settings.cr_line_height, true);
-      setLetterSpace(doc, settings.cr_letter_space, true);
-      setMaxWidth(doc, settings.cr_max_width, true);
-
-      setDefaultCss(doc, settings.cr_default_css, true);
-      setBackgroundColor(doc, settings.cr_background_color_light, "cr-theme-light", true);
-      setTextColor(doc, settings.cr_text_color_light, "cr-theme-light", true);
-      setLinkColor(doc, settings.cr_link_color_light, "cr-theme-light", true);
-      
-      setBackgroundColor(doc, settings.cr_background_color_dark, "cr-theme-dark", true);
-      setTextColor(doc, settings.cr_text_color_dark, "cr-theme-dark", true);
-      setLinkColor(doc, settings.cr_link_color_dark, "cr-theme-dark", true);
-     
-      setBackgroundColor(doc, settings.cr_background_color, "cr-theme-custom", true);
-      setTextColor(doc, settings.cr_text_color, "cr-theme-custom", true);
-      setLinkColor(doc, settings.cr_link_color, "cr-theme-custom", true);
-    
-      setTheme(doc, settings.cr_theme, true);
-
-      setDarkPanel(doc, settings.cr_dark_panel, true);
-      setDisplayFooter(doc, settings.cr_display_footer, true);
-      setDisplayOutline(doc, settings.cr_display_outline, true);
-      setDisplayImages(doc, settings.cr_display_images, true);
-      setDisplayNotes(doc, settings.cr_display_notes, true);
-      setDisplayMeta(doc, settings.cr_display_meta, true);
-      setDisplayAuthor(doc, settings.cr_display_author, true);
-      setDisplayReadingTime(doc, settings.cr_display_reading_time, true);
-
-      settings_synced = true;
-      current_user.app_setting_existed = true;
-
-      //console.log("Setting should be updated now");
-    } else if (response.data.status == 404) {
-      alert("Oppss...Either there's no internet connection or our servers are offline");
-    }  else {
-      alert("Oppss...Something wrong. Please try again later");
-    }
-  });
-}
-
-// Push settings from server
-function pushSettings(doc){
-  app_setting = {
-    cr_theme: cr_theme,
-    cr_font_family: cr_font_family,
-    cr_font_size: cr_font_size,
-    cr_line_height: cr_line_height,
-    cr_letter_space: cr_letter_space,
-    cr_max_width: cr_max_width,
-    cr_default_css: cr_default_css,
-    cr_background_color_light: cr_background_color_light,
-    cr_text_color_light: cr_text_color_light,
-    cr_link_color_light: cr_link_color_light,
-    cr_background_color_dark: cr_background_color_dark,
-    cr_text_color_dark: cr_text_color_dark,
-    cr_link_color_dark: cr_link_color_dark,
-    cr_background_color: cr_background_color,
-    cr_text_color: cr_text_color,
-    cr_link_color: cr_link_color,
-    cr_theme: cr_theme,
-    cr_dark_panel: cr_dark_panel,
-    cr_display_footer: cr_display_footer,
-    cr_scroll_speed: cr_scroll_speed,
-    cr_display_outline: cr_display_outline,
-    cr_display_images: cr_display_images,
-    cr_display_notes: cr_display_notes,
-    cr_display_meta: cr_display_meta,
-    cr_display_author: cr_display_author,
-    cr_display_reading_time: cr_display_reading_time,
-    cr_display_saved_info: cr_display_saved_info,
-    cr_auto_run_rules: cr_auto_run_rules,
-  }
-
-  chrome.runtime.sendMessage({query: "push-settings", user: current_user, app_setting: app_setting}, function(response) {
-    if (response.data.status == 200) {
-      current_user.app_setting_existed = true;
-    } else if (response.data.status == 404) {
-      alert("Oppss...Either there's no internet connection or our servers are offline");
-    }  else {
-      alert("Oppss...Something wrong. Please try again later");
-    }
-  });
-}
-
-// Syncing settings from/to server
-function syncSettings(doc){
-  setTimeout(function(){
-    chrome.storage.local.get(['cr_user'], function(result) {
-      if (result.cr_user) {
-        if (result.cr_user.app_setting_existed) {
-          pullSettings(doc);
-        } else {
-          pushSettings(doc);
-        }
-      } else {
-        //console.log("No user found");
-      }
-    });
-  }, 3000);
-}
-
-/*** Sync Settings ***/
-function syncStyles() {
-  settings = {
-    font_family: cr_font_family,
-    font_size: cr_font_size,
-    line_height: cr_line_height,
-    letter_space: cr_letter_space,
-    max_width: cr_max_width
-  }
-
-  chrome.runtime.sendMessage({query: "update-styles", user: current_user, settings: settings}, function(response) {
-    if (response.data.status == 200) {
-      //alert(`Settings have been successfully synced`);
-    } else if (response.data.status == 404) {
-      //alert("Oppss...Either there's no internet connection or our servers are offline");
-    }  else {
-      //alert("Oppss...Something wrong. Please try again later");
-    }
-  });
-}
-
-function syncReaderComponents() {
-  settings = {
-    dark_panel: cr_auto_dark_panel,
-    display_footer: cr_display_footer,
-    scroll_speed: cr_scroll_speed,
-    display_outline: cr_display_outline,
-    display_images: cr_display_images,
-    display_notes: cr_display_notes,
-    display_meta: cr_display_meta,
-    display_author: cr_display_author,
-    display_reading_time: cr_display_reading_time,
-  }
-
-  chrome.runtime.sendMessage({query: "update-reader-components", user: current_user, settings: settings}, function(response) {
-    if (response.data.status == 200) {
-      //alert(`Settings have been successfully synced`);
-    } else if (response.data.status == 404) {
-      //alert("Oppss...Either there's no internet connection or our servers are offline");
-    }  else {
-      //alert("Oppss...Something wrong. Please try again later");
-    }
-  });
-}
-
-/*** Set Settings ***/
-function removeInlineElemStyles(doc){
-  $(doc).find('#cr-content-container, #cr-body, #cr-content-wrapper').find("p,li,a,h1,h2,h3,h4,h5.h6").css("font-family","");
-  $(doc).find('#cr-content-container, #cr-body, #cr-content-wrapper').find("p,li,a,h1,h2,h3,h4,h5.h6").css("font-size","");
-  $(doc).find('#cr-content-container, #cr-body, #cr-content-wrapper').find("p,li,a,h1,h2,h3,h4,h5.h6").css("line-height","");
-  $(doc).find('#cr-content-container, #cr-body, #cr-content-wrapper').find("p,li,a,h1,h2,h3,h4,h5.h6").css("letter-spacing","");
-  $(doc).find('#cr-content-container, #cr-body, #cr-content-wrapper').find("p,li,a,h1,h2,h3,h4,h5.h6").css("color","");
-}
 function setFontFamily(doc, val, save) {
 
     cr_font_family = val;
@@ -1356,39 +1013,7 @@ function setDefaultCss(doc, val, save){
 }
 
 
-function articleGetCurrent(doc){
-  article = {
-    title: title,
-    excerpt: excerpt,
-    content: content,
-    url: article_url,
-    cloud_url: cloud_article_url,
-    author: author,
-    reading_time: reading_time
-  }
 
-  return article;
-}
-function changeFolder(doc){
-  $(doc).find("#options-saved-panel .loading-status").html("<span class='loading-dots'>Changing folder</span>...");
-
-  article = articleGetCurrent(doc);
-  folder = folderGetSelected(doc);
-  chrome.runtime.sendMessage({query: "change-folder", user: current_user, article: article, folder: folder}, function(response) {
-    $(doc).find('#cr-container .saved-version-notice').fadeIn();
-
-    if (response.data.status == 200) {
-      // Show saved info & status
-      $(doc).find("#options-saved-panel .loading-status").html("<i class='fas fa-check-circle'></i> &nbsp;Folder changed");
-    } else if (response.data.status == 404) {
-      alert("Connection Error!");
-      $(doc).find("#options-saved-panel .loading-status").html("");
-    }  else {
-      alert("Something went wrong... Please try again later");
-      $(doc).find("#options-saved-panel .loading-status").html("");
-    }
-  });
-}
 
 /*** Options Listeners & Save ***/
 function optionsDefaultSettings(doc) {
@@ -1622,7 +1247,6 @@ function optionsReaderComponents(doc) {
     cr_scroll_speed = $(doc).find("#options-scroll-speed input").val();
     cr_display_outline = getCheckboxStatus( $(doc).find("#options-display-outline input") );
     cr_display_images = getCheckboxStatus( $(doc).find("#options-display-images input") );
-    cr_display_notes = getCheckboxStatus( $(doc).find("#options-display-notes input") );
     cr_display_meta = getCheckboxStatus( $(doc).find("#options-display-meta input") );
     cr_display_author = getCheckboxStatus( $(doc).find("#options-display-author input") );
     cr_display_reading_time = getCheckboxStatus( $(doc).find("#options-display-reading-time input") );
@@ -1632,11 +1256,9 @@ function optionsReaderComponents(doc) {
     saveStorageValue("cr_display_footer", cr_display_footer);
     saveStorageValue("cr_display_outline", cr_display_outline);
     saveStorageValue("cr_display_images", cr_display_images);
-    saveStorageValue("cr_display_notes", cr_display_notes);
     saveStorageValue("cr_display_meta", cr_display_meta);
     saveStorageValue("cr_display_author", cr_display_author);
     saveStorageValue("cr_display_reading_time", cr_display_reading_time);
-    syncReaderComponents();
     console.log("saved changes")
     $("<span class='text-info'>Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
     
@@ -1725,11 +1347,7 @@ function init(){
     optionsStyle(doc);
     optionsTheme(doc);
     optionsReaderComponents(doc);
-  
-    // Sync settings from/to server
-    //syncSettings(doc);
 
-   
     // Make sure no injected margin around the body
     $(doc).find("body").css("margin", 0);
 
@@ -1747,13 +1365,6 @@ function init(){
 
 var latest_url;
 function launch() {
-  // Initiate current_user
-  initiateCurrentUser();
-
-  // If license modal exist, remove it first
-  if( $("#cr-license-iframe").length ) {
-    $("#cr-license-iframe").remove();
-  }
 
   // Detect past iframe - don't show another
   if(document.getElementById("cr-iframe") == null) {
