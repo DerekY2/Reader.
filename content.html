@@ -129,15 +129,15 @@
           <label>Theme</label>
           <ul>
             <li>
-              <a href="#/" class="options-theme-light" data-theme="cr-theme-light"></a>
+              <a href="#/" class="options-theme-light" id="light-theme-button" data-theme="light-theme"></a>
               <span class="label">Light</span>
             </li>
             <li>
-              <a href="#/" class="options-theme-dark" data-theme="cr-theme-dark"></a>
+              <a href="#/" class="options-theme-dark" id="dark-theme-button" data-theme="dark-theme"></a>
               <span class="label">Dark</span>
             </li>
             <li>
-              <a href="#/" class="options-theme-custom active" data-theme="cr-theme-custom"></a>
+              <a href="#/" class="options-theme-custom active" id="custom-theme-button" data-theme="custom-theme"></a>
               <span class="label">Custom</span>
             </li>
           </ul>
@@ -151,6 +151,16 @@
             <input type="text" class="color" name="background_color" value="#F8F1E3" spellcheck="false" autocomplete="off" />
           </div>
         </div>
+
+        <div id="options-foreground-color" class="options-panel-content-section">
+          <label class="float-left">Background Color 2</label>
+
+          <div class="input-group color-picker">
+            <label class="color"><input type="color" value="#F8F1E3" ></label>
+            <input type="text" class="color" name="foreground_color" value="#F8F1E3" spellcheck="false" autocomplete="off" />
+          </div>
+        </div>
+
 
         <div id="options-text-color" class="options-panel-content-section">
           <label class="float-left">Text Color</label>
@@ -174,6 +184,7 @@
 
       <button class="options-panel-header"><i class="fas fa-columns"></i> &nbsp;Options <i class="fas fa-chevron-down marker"></i></button>
       <div class="options-panel-content">
+
         <div id="options-dark-panel" class="options-panel-content-section">
           <label class="float-left">Dark Panel</label>
           <div class="float-right m-t-7">
@@ -181,6 +192,14 @@
             <label for="cr_dark_panel" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
           </div>
         </div>
+
+          <div id="options-display-foreground" class="options-panel-content-section">
+            <label class="float-left">Dynamic Island</label>
+            <div class="float-right m-t-7">
+              <input type="checkbox" id="cr_foreground" name="foreground" class="switch-input">
+              <label for="cr_foreground" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
+            </div>
+          </div>
 
 
         <div id="options-display-footer" class="options-panel-content-section">
@@ -239,7 +258,7 @@
     </div>
 
     
-
+  <section id = "reader-foreground" style="padding: 40; padding-top: 15; border-radius: 5px; ">
     <!-- Meta -->
     <ul id="cr-meta" style="display: none">
     </ul>
@@ -269,9 +288,10 @@
             </a>
           </li>
         </ul>
-        
-      </div>
 
+      </div>
+    </div>
+  </section>
 
     <!-- Footer -->
     <div id="cr-footer">
@@ -283,7 +303,7 @@
         
       </ul>
     </div>
-  </div>
+
 </div>
 
 <!--

@@ -113,24 +113,4 @@ ul.tagit input[type="text"] {
     color: #fff;
 }
 
-.tags {
-  &.tags-tagged{
-    li {
-      display: inline;
-      a{
-        background: #f7f7f7;
-        padding: 5px 10px;
-        border-radius: 5px;
-        margin-right: 5px;
-        color: #7F7F7F;
-        font-size: 12px;
-        font-weight: 700;
 
-        &.tag-success{
-          color: #fff;
-          background: #2ecc71;
-        }
-      }
-    }
-  }
-}

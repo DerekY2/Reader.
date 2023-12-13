@@ -31,6 +31,14 @@
   transition: .3s;
   position: relative;
 }
+
+.link{
+  transition: .3s;
+}
+
+#reader-foreground{
+  transition: .3s;
+}
 #cr-body a{
   color: inherit;
 }
@@ -131,9 +139,14 @@
 
 /***** Content Container *****/
 #cr-content-container{
+  color: inherit;
   margin-top: 30px;
   margin-bottom: 40px;
+  
+  
 }
+
+
 #cr-content-container #cr-title{
   margin-top: 0;
 }

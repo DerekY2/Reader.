@@ -1,7 +1,7 @@
 var title, excerpt, content,article_url,author,reading_time,tag_list, lastLogTime;
 
 // Settings
-var cr_theme = "cr-theme-custom";
+var cr_theme = "custom-theme";
 var cr_font_family = "Arial";
 var cr_font_size = 16;
 var cr_line_height = 1;
@@ -89,6 +89,22 @@ var cr_default_css = `
     line-height: 0.6;
     opacity: 0.2;
   }
+
+  /* Customize the scrollbar track */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  /* Customize the scrollbar handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 6px;
+  }
+  
+  /* Customize the scrollbar track on hover */
+  ::-webkit-scrollbar-track:hover {
+    background-color: transparent;
+  }
 `;
 var cr_background_color_light = "#FFFFFF";
 var cr_text_color_light = "#333333";
@@ -96,13 +112,24 @@ var cr_link_color_light = "#5F6368";
 var cr_background_color_dark = "#35363a";
 var default_background_color_dark = "#35363a"
 var default_background_color_light = "#FFFFFF"
+var default_text_color_light = "#333333";
+var default_link_color_light = "#5F6368"
+var default_text_color_dark = "#E0E0E0"
+var default_linkcolor_dark = "#FFFFFF"
+var cr_foreground_color_light = "#ededed"
+var cr_foreground_color_dark = "#464545"
+var cr_background_w_color_dark = "#464545"
+var default_foreground_color_light = "#ededed"
+var default_foreground_color_dark = "#464545"
 var cr_text_color_dark = "#E0E0E0";
 var cr_link_color_dark = "#FFFFFF";
 var cr_background_color = "#F8F1E3";
+var cr_foreground_color = "#FFFFFF"
 var cr_text_color = "#333333";
 var cr_link_color = "#5F6368";
-var cr_theme = "cr-theme-custom";
+var cr_theme = "custom-theme";
 var cr_dark_panel = "on";
+var cr_foreground = "on";
 var cr_display_footer = "off";
 var cr_display_outline = "off";
 var cr_display_images = "on";
@@ -110,73 +137,24 @@ var cr_display_meta = "on";
 var cr_display_author = "on";
 var cr_display_reading_time = "on";
 
-// Encode/Decode HTML based on LZW compression
-function compressHTML(document) {
-  var charCodeAt = 'charCodeAt',
-    index,
-    storageArray = {},
-    inputChars = document.split(""),
-    compressedCodes = [],
-    currentSequence = inputChars[0],
-    arrayIndex = 256;
-
-  for (index = 1; index < inputChars.length; index++) {
-      document = inputChars[index];
-
-      if (null != storageArray[currentSequence + document]) {
-          currentSequence += document;
-      } else {
-          compressedCodes.push(1 < currentSequence.length ? storageArray[currentSequence] : currentSequence[charCodeAt](0));
-          storageArray[currentSequence + document] = arrayIndex;
-          arrayIndex++;
-          currentSequence = document;
-      }
+function showPalette(show, doc){
+  if(!show){
+    $(doc).find("#options-background-color").hide();
+    $(doc).find("#options-foreground-color").hide();
+    $(doc).find("#options-text-color").hide();
+    $(doc).find("#options-link-color").hide();
+    console.log("hidden")
   }
 
-    if (1 < currentSequence.length) {
-      compressedCodes.push(storageArray[currentSequence]);
-    } else {
-      compressedCodes.push(currentSequence[charCodeAt](0));
-    }
-  
-  for (index = 0; index < compressedCodes.length; index++) {
-      compressedCodes[index] = String.fromCharCode(compressedCodes[index]);
+  else if(show){
+      $(doc).find("#options-background-color").show();
+      $(doc).find("#options-foreground-color").show();
+      $(doc).find("#options-text-color").show();
+      $(doc).find("#options-link-color").show();
+      console.log("showed")
   }
+};
 
-  return compressedCodes.join("");
-}
-
-
-function decompressHTML(doc) {
-var currentChar, dictionary = {},
-  inputChars = doc.split(""),
-  currentSequence = firstChar = inputChars[0],
-  decompressed = [firstChar],
-  arrayIndex = nextCode = 256;
-
-for (var i = 1; i < inputChars.length; i++) {
-    currentChar = inputChars[i].charCodeAt(0);
-    // currentChar = arrayIndex > currentChar ? inputChars[i] : (dictionary[currentChar] ? dictionary[currentChar] : firstChar + currentSequence);
-
-    if (arrayIndex > currentChar) {
-      currentChar = inputChars[i];
-    } else {
-      if (dictionary[currentChar]) {
-          currentChar = dictionary[currentChar];
-      } else {
-          currentChar = firstChar + currentSequence;
-      }
-    }
-  
-    decompressed.push(currentChar);
-    currentSequence = currentChar.charAt(0);
-    dictionary[nextCode] = firstChar + currentSequence;
-    nextCode++;
-    firstChar = currentChar;
-}
-
-return decompressed.join("");
-}
 // Copy to clipboard
 function media_clipboard(doc, item){
   $(doc).find(item).click(function(){
@@ -308,24 +286,7 @@ function startPreloader(doc){
   $(doc).find("body").prepend(preloader);
 }
 
-// Create iframe
-function createIframe(){
-  var iframe = document.createElement('iframe');
-  iframe.id = "cr-iframe";
-  iframe.style.height = "100%";
-  iframe.style.width="100%";
-  iframe.style.position = "fixed";
-  iframe.style.top = "0px";
-  iframe.style.right = "0px";
-  iframe.style.zIndex = "9000000000000000000";
-  iframe.frameBorder = "none";
-  iframe.style.backgroundColor = "#fff";
 
-  preloader = getPreloader();
-  $(iframe).contents().find('body').html(preloader);
-
-  return iframe;
-}
 
 /* Get HTML Of Selected Text */
 function getHTMLOfSelection () {
@@ -722,14 +683,14 @@ function popupwindow(url, title, w, h) {
 
 // Save setting's value to storage
 function saveStorageValue(storage, val) {
-  chrome.storage.sync.set({[storage]: val});
+  chrome.sorage.local.set({[storage]: val});
 }
 
 function setFontFamily(doc, val, save) {
 
     cr_font_family = val;
     if(save){
-    chrome.storage.sync.set({cr_font_family: val});
+    chrome.sorage.local.set({cr_font_family: val});
     }
   $(doc).find('#cr-content-container').css( "font-family", val );
   $(doc).find(`#options-font-family select option[value='${val}']`).prop('selected', true);
@@ -738,7 +699,7 @@ function setFontSize(doc, val, save) {
  
     cr_font_size = val;
     if(save){
-    chrome.storage.sync.set({cr_font_size: val});
+    chrome.sorage.local.set({cr_font_size: val});
     }
   $(doc).find("#cr-content-container").css( "font-size", val );
   $(doc).find("#options-font-size input").val(  val );
@@ -748,7 +709,7 @@ function setLineHeight(doc, val, save) {
 
     cr_line_height = val;
     if(save){
-    chrome.storage.sync.set({cr_line_height: val});
+    chrome.sorage.local.set({cr_line_height: val});
     }
   $(doc).find("#cr-content-container").css( "line-height", val );
   $(doc).find("#options-line-height input").val(  val );
@@ -758,7 +719,7 @@ function setLetterSpace(doc, val, save) {
 
     cr_letter_space = val;
     if(save){
-    chrome.storage.sync.set({cr_letter_space: val});
+    chrome.sorage.local.set({cr_letter_space: val});
     }
   $(doc).find("#cr-content-container").css( "letter-spacing", val );
   $(doc).find("#options-letter-space input").val(  val );
@@ -768,7 +729,7 @@ function setMaxWidth(doc, val, save) {
   
     cr_max_width = val;
     if(save){
-    chrome.storage.sync.set({cr_max_width: val});
+    chrome.sorage.local.set({cr_max_width: val});
     }
 
   cr_max_width = val;
@@ -777,50 +738,111 @@ function setMaxWidth(doc, val, save) {
   $(doc).find("#options-max-width .val").text(  val );
 }
 function setBackgroundColor(doc, val, theme, save) {
-  if (theme == "cr-theme-light") {
+  if (theme == "light-theme") {
     cr_background_color_light = default_background_color_light;
+
     console.log("set background color to ", default_background_color_light)
+    chrome.sorage.local.set({cr_background_color_light: default_background_color_light});
     if(save){
-    chrome.storage.sync.set({cr_background_color_light: default_background_color_light});
+      chrome.sorage.local.set({cr_background_color_light: default_background_color_light});
     }
-  } else if (theme == "cr-theme-dark"){
+  } 
+  else if (theme == "dark-theme"){
     cr_background_color_dark = default_background_color_dark;
     console.log("set background color to ", val)
+ 
     if(save){
-    chrome.storage.sync.set({cr_background_color_dark: default_background_color_dark});
+      chrome.sorage.local.set({cr_background_color_dark: default_background_color_dark});
     }
-  } else if (theme == "cr-theme-custom"){
+  } 
+  else if (theme == "custom-theme"){
     cr_background_color = val;
+ 
     rateLimitLog("set background color to ", val)
     if(save){
-    chrome.storage.sync.set({cr_background_color: val});
+    chrome.sorage.local.set({cr_background_color: val});
     console.log("stored custom color ", val)
     }
   } else {
   }
 
   $(doc).find("#cr-body").css( "background-color", val );
+ 
   $(doc).find("#options-theme ul li a[data-theme='"+theme+"']").css("background-color", val);
 
   $(doc).find("#options-background-color input[name='background_color']").val( val );
   $(doc).find("#options-background-color input[type='color']").val(  val );
   $(doc).find("#options-background-color label.color").css('background-color', val);
 }
+
+
+function setForegroundColor(doc, val, theme, save) {
+  if (theme == "light-theme") {
+    cr_foreground_color_light = default_foreground_color_light;
+
+    console.log("set foreground color to ", default_foreground_color_light)
+
+    if(save){
+      chrome.sorage.local.set({cr_foreground_color_light: default_foreground_color_light});
+    }
+  } 
+  else if (theme == "dark-theme"){
+    cr_foreground_color_dark = default_foreground_color_dark;
+    console.log("set foreground color to ", val)
+
+    if(save){
+      chrome.sorage.local.set({cr_foreground_color_dark: default_foreground_color_dark});
+    }
+  } 
+  else if (theme == "custom-theme"){
+    cr_foreground_color = val;
+ 
+    rateLimitLog("set Foreground color to ", val)
+    if(save){
+    chrome.sorage.local.set({cr_foreground_color: val});
+    console.log("stored custom foreground", val)
+    }
+  }
+
+  if(getCheckboxStatus( $(doc).find("#options-display-foreground input") ) == "on"){
+    $(doc).find("#reader-foreground").css( {
+      "background-color": val, 
+      "box-shadow": "0 8px 16px rgba(0, 0, 0, 0.1)",
+  });
+    console.log("foreground is on")
+  }
+  else{
+    $(doc).find("#reader-foreground").css({
+      "background-color":"transparent",
+      "box-shadow": "0 0px 0px rgba(0, 0, 0, 0)"
+    });
+    console.log("foreground is off")
+  }
+  $(doc).find("#options-foreground-color input[name='foreground_color']").val( val );
+  $(doc).find("#options-foreground-color input[type='color']").val(  val );
+  $(doc).find("#options-foreground-color label.color").css('background-color', val);
+}
+
+
+
+
 function setTextColor(doc, val, theme, save) {
-  if (theme == "cr-theme-light") {
+  if (theme == "light-theme") {
     cr_text_color_light = val;
+
     if(save){
-    chrome.storage.sync.set({cr_text_color_light: val})
+    chrome.sorage.local.set({cr_text_color_light: val})
     }
-  } else if (theme == "cr-theme-dark"){
+  } else if (theme == "dark-theme"){
     cr_text_color_dark = val;
+
     if(save){
-    chrome.storage.sync.set({cr_text_color_dark: val})
+    chrome.sorage.local.set({cr_text_color_dark: val})
     }
-  } else if (theme == "cr-theme-custom"){
+  } else if (theme == "custom-theme"){
     cr_text_color = val;
     if(save){
-    chrome.storage.sync.set({cr_text_color: val})
+    chrome.sorage.local.set({cr_text_color: val})
     }
   } else {
   }
@@ -832,20 +854,22 @@ function setTextColor(doc, val, theme, save) {
   $(doc).find("#options-text-color label.color").css('background-color', val);
 }
 function setLinkColor(doc, val, theme, save) {
-  if (theme == "cr-theme-light") {
+  if (theme == "light-theme") {
     cr_link_color_light = val;
+
     if(save){
-    chrome.storage.sync.set({cr_link_color_light: val})
+    chrome.sorage.local.set({cr_link_color_light: val})
     }
-  } else if (theme == "cr-theme-dark"){
+  } else if (theme == "dark-theme"){
     cr_link_color_dark = val;
+
     if(save){
-    chrome.storage.sync.set({cr_link_color_dark: val})
+    chrome.sorage.local.set({cr_link_color_dark: val})
     }
-  } else if (theme == "cr-theme-custom"){
+  } else if (theme == "custom-theme"){
     cr_link_color = val;
     if(save){
-    chrome.storage.sync.set({cr_link_color: val})
+    chrome.sorage.local.set({cr_link_color: val})
     }
   } else {
   }
@@ -860,7 +884,7 @@ function setTheme(doc, val, save){
  
     cr_theme = val;
     if(save){
-    chrome.storage.sync.set({cr_theme: val});
+    chrome.sorage.local.set({cr_theme: val});
     }
 
   $(doc).find("#options-theme ul li a").each(function(){
@@ -872,20 +896,26 @@ function setTheme(doc, val, save){
   });
   $(doc).find("#cr-body").attr("class", val);
 
-  if (val == "cr-theme-light") {
-    setBackgroundColor(doc, cr_background_color_light, "cr-theme-light");
-    setTextColor(doc, cr_text_color_light, "cr-theme-light");
-    setLinkColor(doc, cr_link_color_light, "cr-theme-light");
+  if (val == "light-theme") {
+    showPalette(false, doc);
+    setBackgroundColor(doc, cr_background_color_light, "light-theme");
+    setForegroundColor(doc, cr_foreground_color_light, "light-theme");
+    setTextColor(doc, cr_text_color_light, "light-theme");
+    setLinkColor(doc, cr_link_color_light, "light-theme");
   
-  } else if (val == "cr-theme-dark"){
-    setBackgroundColor(doc, cr_background_color_dark, "cr-theme-dark");
-    setTextColor(doc, cr_text_color_dark, "cr-theme-dark");
-    setLinkColor(doc, cr_link_color_dark, "cr-theme-dark");
+  } else if (val == "dark-theme"){
+    showPalette(false, doc);
+    setBackgroundColor(doc, cr_background_color_dark, "dark-theme");
+    setForegroundColor(doc, cr_foreground_color_dark, "dark-theme");
+    setTextColor(doc, cr_text_color_dark, "dark-theme");
+    setLinkColor(doc, cr_link_color_dark, "dark-theme");
 
-  } else if (val == "cr-theme-custom"){
-    setBackgroundColor(doc, cr_background_color, "cr-theme-custom");
-    setTextColor(doc, cr_text_color, "cr-theme-custom");
-    setLinkColor(doc, cr_link_color, "cr-theme-custom");
+  } else if (val == "custom-theme"){
+    showPalette(true, doc);
+    setBackgroundColor(doc, cr_background_color, "custom-theme");
+    setForegroundColor(doc, cr_foreground_color, "custom-theme");
+    setTextColor(doc, cr_text_color, "custom-theme");
+    setLinkColor(doc, cr_link_color, "custom-theme");
    
   } else {
   }
@@ -901,7 +931,7 @@ function setDisplayOutline(doc, status, save) {
  
     cr_display_outline = status;
     if(save){
-    chrome.storage.sync.set({cr_display_outline: status});
+    chrome.sorage.local.set({cr_display_outline: status});
     }
   
 }
@@ -916,7 +946,7 @@ function setDisplayImages(doc, status, save) {
   if (save) {
     cr_display_images = status;
     
-    chrome.storage.sync.set({cr_display_images: status});
+    chrome.sorage.local.set({cr_display_images: status});
     
   }
 }
@@ -932,7 +962,7 @@ function setDisplayMeta(doc, status, save) {
   if (save) {
     cr_display_meta = status;
     
-    chrome.storage.sync.set({cr_display_meta: status});
+    chrome.sorage.local.set({cr_display_meta: status});
     
   }
 }
@@ -947,7 +977,7 @@ function setDisplayAuthor(doc, status, save) {
   if (save) {
     cr_display_author = status;
     
-    chrome.storage.sync.set({cr_display_author: status});
+    chrome.sorage.local.set({cr_display_author: status});
     
   }
 }
@@ -963,7 +993,7 @@ function setDisplayReadingTime(doc, status, save) {
   if (save) {
     cr_display_reading_time = status;
     
-    chrome.storage.sync.set({cr_display_reading_time: status});
+    chrome.sorage.local.set({cr_display_reading_time: status});
     
   }
 }
@@ -980,10 +1010,58 @@ function setDarkPanel(doc, status, save){
   if (save) {
     cr_dark_panel = status;
   
-    chrome.storage.sync.set({cr_dark_panel: status});
+    chrome.sorage.local.set({cr_dark_panel: status});
     
   }
 }
+
+function setForeground(doc, status, save){
+  if (status == "on") {
+    var theme = $(doc).find("#options-theme ul li a.active").attr("data-theme");
+
+    if(theme == "light-theme"){
+      setForegroundColor(doc, cr_foreground_color_light, "light-theme");
+      console.log("Set Light color - ", cr_foreground_color_light)
+      cr_foreground = status;
+
+    }
+    else if(theme == "dark-theme"){
+      setForegroundColor(doc, cr_foreground_color_dark, "dark-theme");
+      console.log("Set Dark color - ", cr_foreground_color_dark)
+      cr_foreground = status;
+
+    }
+    else if(theme == "custom-theme"){
+      setForegroundColor(doc, cr_foreground_color, "custom-theme");
+      console.log("Set Custom color - ", cr_foreground_color)
+      cr_foreground = status;
+
+    }
+    $(doc).find("#reader-foreground").css("box-shadow","0 8px 16px rgba(0, 0, 0, 0.1)");
+    $(doc).find("#options-display-foreground input").prop("checked", true);
+    console.log("turned on dynamic island");
+    cr_foreground = status;
+
+  } else {
+    $(doc).find("#reader-foreground").css({
+      "background-color":"transparent",
+      "box-shadow": "0 0px 0px rgba(0, 0, 0, 0)",
+    });
+    $(doc).find("#options-display-foreground input").prop("checked", false);
+    console.log("turned off dynamic island")
+
+    cr_foreground = status;
+
+  }
+  cr_foreground = status;
+  if (save) {
+    cr_foreground = status;
+  
+    chrome.sorage.local.set({cr_foreground: status});
+    
+  }
+}
+
 function setDisplayFooter(doc, status, save) {
   if (status == "on") {
     $(doc).find('#cr-container #cr-footer').hide();
@@ -995,7 +1073,7 @@ function setDisplayFooter(doc, status, save) {
   if (save) {
     cr_display_meta = status;
    
-    chrome.storage.sync.set({cr_display_meta: status});
+    chrome.sorage.local.set({cr_display_meta: status});
     
   }
 }
@@ -1003,7 +1081,7 @@ function setDisplayFooter(doc, status, save) {
 function setDefaultCss(doc, val, save){
   if (save) {
     cr_default_css = val;
-    chrome.storage.sync.set({'cr_default_css': val});
+    chrome.sorage.local.set({'cr_default_css': val});
   }
   $(doc).find("#options-default-css textarea").html(val);
   if ($(doc).find("#cr_default_css").length == false) {
@@ -1018,15 +1096,15 @@ function setDefaultCss(doc, val, save){
 /*** Options Listeners & Save ***/
 function optionsDefaultSettings(doc) {
   // Options Style
-  chrome.storage.sync.get(['cr_font_family'],function(result){setFontFamily(doc, (result.cr_font_family) ? result.cr_font_family : 'Arial', true) });
-  chrome.storage.sync.get(['cr_font_size'],function(result){setFontSize(doc, (result.cr_font_size) ? result.cr_font_size : 16, true) });
-  chrome.storage.sync.get(['cr_line_height'],function(result){setLineHeight(doc, (result.cr_line_height) ? result.cr_line_height : 1.84, true) });
-  chrome.storage.sync.get(['cr_letter_space'],function(result){setLetterSpace(doc, (result.cr_letter_space) ? result.cr_letter_space : 0, true) });
-  chrome.storage.sync.get(['cr_max_width'],function(result){setMaxWidth(doc, (result.cr_max_width) ? result.cr_max_width : 680, true) });
+  chrome.sorage.local.get(['cr_font_family'],function(result){setFontFamily(doc, (result.cr_font_family) ? result.cr_font_family : 'Arial', true) });
+  chrome.sorage.local.get(['cr_font_size'],function(result){setFontSize(doc, (result.cr_font_size) ? result.cr_font_size : 16, true) });
+  chrome.sorage.local.get(['cr_line_height'],function(result){setLineHeight(doc, (result.cr_line_height) ? result.cr_line_height : 1.84, true) });
+  chrome.sorage.local.get(['cr_letter_space'],function(result){setLetterSpace(doc, (result.cr_letter_space) ? result.cr_letter_space : 0, true) });
+  chrome.sorage.local.get(['cr_max_width'],function(result){setMaxWidth(doc, (result.cr_max_width) ? result.cr_max_width : 680, true) });
 
   // Themes
   // Theme & DefaultCSS
-  chrome.storage.sync.get(['cr_default_css'], function(result) {
+  chrome.sorage.local.get(['cr_default_css'], function(result) {
     if (result.cr_default_css) {
       setDefaultCss(doc, result.cr_default_css, true);
     } else {
@@ -1037,28 +1115,32 @@ function optionsDefaultSettings(doc) {
     }
   });
   // Light Theme
-  chrome.storage.sync.get(['cr_background_color_light'],function(result){ setBackgroundColor(doc, (result.cr_background_color_light ? result.cr_background_color_light : "#FFFFFF"), "cr-theme-light", true) });
-  chrome.storage.sync.get(['cr_text_color_light'],function(result){ setTextColor(doc, (result.cr_text_color_light ? result.cr_text_color_light : "#333333"), "cr-theme-light", true) });
-  chrome.storage.sync.get(['cr_link_color_light'],function(result){ setLinkColor(doc, (result.cr_link_color_light ? result.cr_link_color_light : "#5F6368"), "cr-theme-light", true) });
+  chrome.sorage.local.get(['cr_background_color_light'],function(result){ setBackgroundColor(doc, (result.cr_background_color_light ? result.cr_background_color_light : default_background_color_light), "light-theme", true) });
+  chrome.sorage.local.get(['cr_foreground_color_light'],function(result){ setForegroundColor(doc, (result.cr_foreground_color_light ? result.cr_foreground_color_light : default_foreground_color_light), "light-theme", true) });
+  chrome.sorage.local.get(['cr_text_color_light'],function(result){ setTextColor(doc, (result.cr_text_color_light ? result.cr_text_color_light : default_text_color_light), "light-theme", true) });
+  chrome.sorage.local.get(['cr_link_color_light'],function(result){ setLinkColor(doc, (result.cr_link_color_light ? result.cr_link_color_light : default_link_color_light), "light-theme", true) });
    // Dark Theme
-  chrome.storage.sync.get(['cr_background_color_dark'],function(result){ setBackgroundColor(doc, (result.cr_background_color_dark ? result.cr_background_color_dark : "#1A1A1A"), "cr-theme-dark", true) });
-  chrome.storage.sync.get(['cr_text_color_dark'],function(result){ setTextColor(doc, (result.cr_text_color_dark ? result.cr_text_color_dark : "#E0E0E0"), "cr-theme-dark", true) });
-  chrome.storage.sync.get(['cr_link_color_dark'],function(result){ setLinkColor(doc, (result.cr_link_color_dark ? result.cr_link_color_dark : "#FFFFFF"), "cr-theme-dark", true) });
+  chrome.sorage.local.get(['cr_background_color_dark'],function(result){ setBackgroundColor(doc, (result.cr_background_color_dark ? result.cr_background_color_dark : default_background_color_dark), "dark-theme", true) });
+  chrome.sorage.local.get(['cr_foreground_color_dark'],function(result){ setForegroundColor(doc, (result.cr_foreground_color_dark ? result.cr_foreground_color_dark : default_foreground_color_dark), "dark-theme", true) });
+  chrome.sorage.local.get(['cr_text_color_dark'],function(result){ setTextColor(doc, (result.cr_text_color_dark ? result.cr_text_color_dark : default_text_color_dark), "dark-theme", true) });
+  chrome.sorage.local.get(['cr_link_color_dark'],function(result){ setLinkColor(doc, (result.cr_link_color_dark ? result.cr_link_color_dark : default_linkcolor_dark), "dark-theme", true) });
    // Custom Theme
-  chrome.storage.sync.get(['cr_background_color'],function(result){ setBackgroundColor(doc, (result.cr_background_color ? result.cr_background_color : "#F8F1E3"), "cr-theme-custom", true) });
-  chrome.storage.sync.get(['cr_text_color'],function(result){ setTextColor(doc, (result.cr_text_color ? result.cr_text_color : "#333333"), "cr-theme-custom", true) });
-  chrome.storage.sync.get(['cr_link_color'],function(result){ setLinkColor(doc, (result.cr_link_color ? result.cr_link_color : "#5F6368"), "cr-theme-custom", true) });
+  chrome.sorage.local.get(['cr_background_color'],function(result){ setBackgroundColor(doc, (result.cr_background_color ? result.cr_background_color : "#F8F1E3"), "custom-theme", true) });
+  chrome.sorage.local.get(['cr_foreground_color'],function(result){ setForegroundColor(doc, (result.cr_foreground_color ? result.cr_foreground_color : "#FFFFFF"), "custom-theme", true) });
+  chrome.sorage.local.get(['cr_text_color'],function(result){ setTextColor(doc, (result.cr_text_color ? result.cr_text_color : "#333333"), "custom-theme", true) });
+  chrome.sorage.local.get(['cr_link_color'],function(result){ setLinkColor(doc, (result.cr_link_color ? result.cr_link_color : "#5F6368"), "custom-theme", true) });
   // Theme (need to be down here bcoz setTheme requires themes' values)
-  chrome.storage.sync.get(['cr_theme'],function(result){ setTheme(doc, (result.cr_theme) ? result.cr_theme : "cr-theme-custom", true) });
+  chrome.sorage.local.get(['cr_theme'],function(result){ setTheme(doc, (result.cr_theme) ? result.cr_theme : "custom-theme", true) });
 
   // Reader Components
-  chrome.storage.sync.get(['cr_dark_panel'],function(result){setDarkPanel(doc, (result.cr_dark_panel) ? result.cr_dark_panel : "on", true) });
-  chrome.storage.sync.get(['cr_display_footer'],function(result){setDisplayFooter(doc, (result.cr_display_footer) ? result.cr_display_footer : "off", true) });
-  chrome.storage.sync.get(['cr_display_outline'],function(result){setDisplayOutline(doc, (result.cr_display_outline) ? result.cr_display_outline : "off", true) });
-  chrome.storage.sync.get(['cr_display_images'],function(result){setDisplayImages(doc, (result.cr_display_images) ? result.cr_display_images : "on", true) });
-  chrome.storage.sync.get(['cr_display_meta'],function(result){setDisplayMeta(doc, (result.cr_display_meta) ? result.cr_display_meta : "on", true) });
-  chrome.storage.sync.get(['cr_display_author'],function(result){setDisplayAuthor(doc, (result.cr_display_author) ? result.cr_display_author : "on", true) });
-  chrome.storage.sync.get(['cr_display_reading_time'],function(result){setDisplayReadingTime(doc, (result.cr_display_reading_time) ? result.cr_display_reading_time : "on", true) });
+  chrome.sorage.local.get(['cr_dark_panel'],function(result){setDarkPanel(doc, (result.cr_dark_panel) ? result.cr_dark_panel : "on", true) });
+  chrome.sorage.local.get(['cr_foreground'],function(result){setForeground(doc, (result.cr_foreground) ? result.cr_foreground : "on", true) });
+  chrome.sorage.local.get(['cr_display_footer'],function(result){setDisplayFooter(doc, (result.cr_display_footer) ? result.cr_display_footer : "off", true) });
+  chrome.sorage.local.get(['cr_display_outline'],function(result){setDisplayOutline(doc, (result.cr_display_outline) ? result.cr_display_outline : "off", true) });
+  chrome.sorage.local.get(['cr_display_images'],function(result){setDisplayImages(doc, (result.cr_display_images) ? result.cr_display_images : "on", true) });
+  chrome.sorage.local.get(['cr_display_meta'],function(result){setDisplayMeta(doc, (result.cr_display_meta) ? result.cr_display_meta : "on", true) });
+  chrome.sorage.local.get(['cr_display_author'],function(result){setDisplayAuthor(doc, (result.cr_display_author) ? result.cr_display_author : "on", true) });
+  chrome.sorage.local.get(['cr_display_reading_time'],function(result){setDisplayReadingTime(doc, (result.cr_display_reading_time) ? result.cr_display_reading_time : "on", true) });
   
 }
 function optionsMenu(iframe) {
@@ -1124,7 +1206,7 @@ function optionsMenu(iframe) {
 
   // Close
   $(doc).find("#options-close").click(function(){
-    $(iframe).hide();
+    removeIframe();
   });
 }
 function optionsPanelCloseHandler(doc){
@@ -1164,19 +1246,23 @@ function optionsStyle(doc) {
     saveStorageValue("cr_line_height", cr_line_height);
     saveStorageValue("cr_letter_space", cr_letter_space);
     saveStorageValue("cr_max_width", cr_max_width);
-    syncStyles();
 
     $("<span class='text-info'>Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
   });
 }
+
 function getActiveTheme(doc){
   // Get active theme
   cr_theme = $(doc).find("#options-theme ul li a.active").attr("data-theme");
   return cr_theme;
 }
+
+
+
 function optionsTheme(doc) {
   $(doc).find("#options-theme ul li a").click(function() { cr_theme = $(this).attr("data-theme"); setTheme(doc, cr_theme); });
   $(doc).find("#options-background-color input").on("input change", function() { setBackgroundColor(doc, $(this).val(), getActiveTheme(doc)) });
+  $(doc).find("#options-foreground-color input").on("input change", function() { setForegroundColor(doc, $(this).val(), getActiveTheme(doc)) });
   $(doc).find("#options-text-color input").on("input change", function() { setTextColor(doc, $(this).val(), getActiveTheme(doc)) });
   $(doc).find("#options-link-color input").on("input change", function() { setLinkColor(doc, $(this).val(), getActiveTheme(doc)) });
   
@@ -1185,40 +1271,48 @@ function optionsTheme(doc) {
   $(doc).find(".options-panel-content button[name='save-options-themes']").click(function(e){
     cr_theme = getActiveTheme(doc);
     cr_background_color_active = $(doc).find("#options-background-color input[name='background_color']").val().trim();
+    cr_foreground_color_active = $(doc).find("#options-foreground-color input[name='foreground_color']").val().trim();
     cr_text_color_active = $(doc).find("#options-text-color input[name='text_color']").val().trim();
     cr_link_color_active = $(doc).find("#options-link-color input[name='link_color']").val().trim();
     
 
     saveStorageValue("cr_theme", cr_theme);
-    if (cr_theme == "cr-theme-light") {
+    if (cr_theme == "light-theme") {
       cr_background_color_light = cr_background_color_active;
+      cr_foreground_color_light = cr_foreground_color_active;
       cr_text_color_light = cr_text_color_active;
       cr_link_color_light = cr_link_color_active;
       
 
       saveStorageValue("cr_background_color_light", cr_background_color_active);
+      saveStorageValue("cr_foreground_color_light", cr_foreground_color_active);
       saveStorageValue("cr_text_color_light", cr_text_color_active);
       saveStorageValue("cr_link_color_light", cr_link_color_active);
       
-    } else if (cr_theme == "cr-theme-dark") {
+    } else if (cr_theme == "dark-theme") {
       cr_background_color_dark = cr_background_color_active;
+      cr_foreground_color_dark = cr_foreground_color_active;
       cr_text_color_dark = cr_text_color_active;
       cr_link_color_dark = cr_link_color_active;
       
 
       saveStorageValue("cr_background_color_dark", cr_background_color_active);
+      saveStorageValue("cr_foreground_color_dark", cr_foreground_color_active);
       saveStorageValue("cr_text_color_dark", cr_text_color_active);
       saveStorageValue("cr_link_color_dark", cr_link_color_active);
      
-    } else if (cr_theme == "cr-theme-custom") {
+    } else if (cr_theme == "custom-theme") {
       console.log("saving custom theme(1)")
       cr_background_color_custom = cr_background_color_active;
+      cr_foreground_color_custom = cr_foreground_color_active;
       console.log("saving: ", cr_background_color_custom, " = ", cr_background_color_active)
+      console.log("saving: ", cr_foreground_color_custom, " = ", cr_foreground_color_active)
       cr_text_color_custom = cr_text_color_active;
       cr_link_color_custom = cr_link_color_active;
       
 
       saveStorageValue("cr_background_color", cr_background_color_active);
+      saveStorageValue("cr_foreground_color", cr_foreground_color_active);
       saveStorageValue("cr_text_color", cr_text_color_active);
       saveStorageValue("cr_link_color", cr_link_color_active);
     
@@ -1233,6 +1327,7 @@ function optionsTheme(doc) {
 function optionsReaderComponents(doc) {
   // Listeners
   $(doc).find("#options-dark-panel input").change(function(){ setDarkPanel(doc, getCheckboxStatus($(this))); });
+  $(doc).find("#options-display-foreground input").change(function(){ setForeground(doc, getCheckboxStatus($(this))); });
   $(doc).find("#options-display-footer input").change(function(){ setDisplayFooter(doc, getCheckboxStatus($(this))); });
   $(doc).find( "#options-display-outline input").change(function(){ setDisplayOutline(doc, getCheckboxStatus($(this))); });
   $(doc).find( "#options-display-images input").change(function(){ setDisplayImages(doc, getCheckboxStatus($(this))); });
@@ -1243,6 +1338,7 @@ function optionsReaderComponents(doc) {
   // Save
   $(doc).find(".options-panel-content button[name='save-options-reader-components']").click(function(e){
     cr_auto_dark_panel = getCheckboxStatus( $(doc).find("#options-dark-panel input") );
+    cr_foreground = getCheckboxStatus( $(doc).find("#options-display-foreground input") );
     cr_display_footer = getCheckboxStatus( $(doc).find("#options-display-footer input") );
     cr_scroll_speed = $(doc).find("#options-scroll-speed input").val();
     cr_display_outline = getCheckboxStatus( $(doc).find("#options-display-outline input") );
@@ -1253,6 +1349,7 @@ function optionsReaderComponents(doc) {
     cr_display_saved_info = getCheckboxStatus( $(doc).find("#options-display-saved-info input") );
 
     saveStorageValue("cr_dark_panel", cr_auto_dark_panel);
+    saveStorageValue("cr_foreground", cr_foreground);
     saveStorageValue("cr_display_footer", cr_display_footer);
     saveStorageValue("cr_display_outline", cr_display_outline);
     saveStorageValue("cr_display_images", cr_display_images);
@@ -1359,7 +1456,7 @@ function init(){
 
     }, 500);
   }).catch(err => {
-    alert("Ops..something wrong, please try again: " + err)
+    alert("Something went wrong... " + err)
   });
 }
 
@@ -1374,20 +1471,56 @@ function launch() {
 
     latest_url = window.location.href;
     init();
-  } else {
-    iframe = document.getElementById("cr-iframe");
-    if($(iframe).is(':visible')){
-      $(iframe).fadeOut();
-    } else {
-      // Only parse the article if the url was changed
-      if (latest_url == window.location) {
-        $(iframe).fadeIn();
-      } else {
-        latest_url = window.location.href;
-        init();
-      }
-    }
+    console.log("created iframe - ", iframe)
+  } 
+  else {
+    removeIframe(iframe)
+    
+    // iframe = document.getElementById("cr-iframe");
+    // if($(iframe).is(':visible')){
+    //   $(iframe).fadeOut();
+    // } else {
+    //   // Only parse the article if the url was changed
+    //   if (latest_url == window.location) {
+    //     $(iframe).fadeIn();
+    //   } else {
+    //     latest_url = window.location.href;
+    //     init();
+    //   }
+    // }
   }
 
 }
+
+// Create iframe
+function createIframe(){
+
+  // Hide main document scrollbar
+  document.body.style.overflow = 'hidden';
+
+  var iframe = document.createElement('iframe');
+  iframe.id = "cr-iframe";
+  iframe.style.height = "100%";
+  iframe.style.width="100%";
+  iframe.style.position = "fixed";
+  iframe.style.top = "0px";
+  iframe.style.right = "0px";
+  iframe.style.zIndex = "9000000000000000000";
+  iframe.frameBorder = "none";
+  iframe.style.backgroundColor = "#fff";
+
+  preloader = getPreloader();
+  $(iframe).contents().find('body').html(preloader);
+  console.log(iframe)
+  return iframe;
+}
+
+function removeIframe() {
+    console.log("removing iframe - ");
+    $("#cr-iframe").remove();
+    iframe = null;
+    console.log("removed iframe - ");
+    document.body.style.overflow = 'auto';
+}
+
 launch();
