@@ -11,8 +11,8 @@
   top: 60px;
   right: 70px;
   position: fixed;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px 0 #dce0e0;
+  border-radius: 15px;
+  box-shadow: 0 1px 3px 0 #606060;
   transition: .5s;
   background: #FFFFFF;
   color: #47525D;
@@ -526,12 +526,12 @@
 #cr-container .switch-label {
   position: relative;
   display: inline-block;
-  min-width: 25px;
+  min-width: 2px;
   cursor: pointer;
   font-weight: 500;
   text-align: right;
   /*margin: 16px;*/
-  padding: 4px 0 4px 44px;
+  padding: 4px 0 4px 25px;
 }
 #cr-container .switch-label:before, .switch-label:after {
   content: "";

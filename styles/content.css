@@ -1,3 +1,35 @@
+
+    
+::-webkit-scrollbar-thumb {
+
+ 
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  display: block;
+  width: 7px;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  opacity:0.4;  
+  background-color: #484845;
+  border-radius: 20px;
+  border-right: none;
+  border-left: none;
+}
+
+html {
+  /* scrollbar-gutter: stable; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #dadbd6;
+}
+
+
 /***** Iframe *****/
 #cr-iframe {
   display: block;
@@ -19,6 +51,8 @@
   /*transition: .5s;*/
   opacity: 1;
 }
+
+
 #cr-iframe body, #cr-iframe #cr-body{
   margin: 0 !important;
   padding: 0 !important;
@@ -33,12 +67,10 @@
 }
 
 .link{
-  transition: .3s;
+
 }
 
-#reader-foreground{
-  transition: .3s;
-}
+
 #cr-body a{
   color: inherit;
 }

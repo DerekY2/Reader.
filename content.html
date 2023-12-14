@@ -1,12 +1,12 @@
 <div id="cr-body" style="display: none;position:relative;">
   <!-- Outline -->
-  <div id="cr-outline" class="cr-sidebar-section no-print">
+  <div id="cr-outline" class="cr-sidebar-section no-print main-stuff">
     <h3>OUTLINE</h3>
     <ul id="cr-outline-list">
     </ul>
   </div>
 
-  <div id="cr-container">
+  <div class="main-stuff" id="cr-container">
     <!-- Saved notice -->
     <div id="cr-saved-notice" style="display:none;">
       <i class='fas fa-check-circle m-r-3'></i> Saved
@@ -14,7 +14,7 @@
 
 
     <!-- Main Menu -->
-    <ul id="options-menu" class="no-print">
+    <ul id="options-menu" class="no-print main-stuff">
       <li>
         <a href="#/" id="options-close" class="tooltip" title="Close">
           <i class="material-icons">close</i>
@@ -189,24 +189,15 @@
           <label class="float-left">Dark Panel</label>
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_dark_panel" name="dark_panel" class="switch-input">
-            <label for="cr_dark_panel" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
+            <label for="cr_dark_panel" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
-
-          <div id="options-display-foreground" class="options-panel-content-section">
-            <label class="float-left">Dynamic Island</label>
-            <div class="float-right m-t-7">
-              <input type="checkbox" id="cr_foreground" name="foreground" class="switch-input">
-              <label for="cr_foreground" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
-            </div>
-          </div>
-
 
         <div id="options-display-footer" class="options-panel-content-section">
           <label class="float-left">Remove Footer</label>
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_footer" name="footer" class="switch-input">
-            <label for="cr_display_footer" class="switch-label"><span class="toggle--on">On</span><span class="toggle--off">Off</span></label>
+            <label for="cr_display_footer" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
 
@@ -215,7 +206,7 @@
 
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_outline" name="outline" class="switch-input">
-            <label for="cr_display_outline" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+            <label for="cr_display_outline" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
 
@@ -223,7 +214,7 @@
           <label class="float-left">Images</label>
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_images" name="display_images" class="switch-input">
-            <label for="cr_display_images" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+            <label for="cr_display_images" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
 
@@ -232,7 +223,7 @@
 
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_meta" name="display_meta" class="switch-input">
-            <label for="cr_display_meta" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+            <label for="cr_display_meta" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
 
@@ -241,7 +232,7 @@
 
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_author" name="display_author" class="switch-input">
-            <label for="cr_display_author" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+            <label for="cr_display_author" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
 
@@ -250,7 +241,7 @@
 
           <div class="float-right m-t-7">
             <input type="checkbox" id="cr_display_reading_time" name="display_reading_time" class="switch-input">
-            <label for="cr_display_reading_time" class="switch-label"><span class="toggle--on">Show</span><span class="toggle--off">Hide</span></label>
+            <label for="cr_display_reading_time" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
           </div>
         </div>
         <button name="save-options-reader-components" class="btn btn-save-changes">Save changes</button>
@@ -258,7 +249,7 @@
     </div>
 
     
-  <section id = "reader-foreground" style="padding: 40; padding-top: 15; border-radius: 5px; ">
+  <section id = "reader-foreground" class = "main-stuff" style="padding: 40; padding-top: 15; border-radius: 5px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1)">
     <!-- Meta -->
     <ul id="cr-meta" style="display: none">
     </ul>
@@ -294,7 +285,7 @@
   </section>
 
     <!-- Footer -->
-    <div id="cr-footer">
+    <div class = "main-stuff" id="cr-footer">
       <p>Generated with <a href="https://youtu.be/BbeeuzU5Qc8" target="_blank" class="cr-footer-brand">Reader.</a></p>
       <ul class="no-print">
         <li>

@@ -3,13 +3,13 @@
 
   "manifest_version": 3,
 
-  "name": "Reader Not Secure",
+  "name": "Reader Test",
   
   "short_name": "Reader.",
 
-  "version": "0.4.4",
+  "version": "0.5.1",
   
-  "description": "Reading Mode for Chrome",
+  "description": "Reader Mode for Chrome",
 
   
   "icons": {
@@ -42,16 +42,5 @@
       "styles/*"
     ],
     "matches": ["<all_urls>"]
-  }],
-
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "chromeos": "Ctrl+Shift+Z",
-        "linux": "Ctrl+Shift+Z",
-        "mac": "Ctrl+Shift+Z",
-        "windows": "Ctrl+Shift+Z"
-      }
-    }
-  }
+  }]
 }
