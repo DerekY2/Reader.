@@ -140,7 +140,7 @@
 #cr-container .options-panel-content #options-auto-run{
   padding-bottom: 10px;
 }
-#cr-container .options-panel-content .btn, #options-saved-panel-body .btn{
+#cr-container .options-panel-content .btn, #save-notice-one #options-saved-panel-body .btn{
   padding: 7px 13px;
   border-radius: 14px;
   font-size: 11px;
