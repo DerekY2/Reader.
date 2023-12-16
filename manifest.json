@@ -22,8 +22,6 @@
   "content_security_policy": {
     "sandbox": "sandbox allow-scripts; 'unsafe-inline' 'self'"
   },
-    
-  
 
   "action": {
     "default_title": "Reader.",
@@ -37,9 +35,15 @@
   "web_accessible_resources": [{
     "resources": [
       "*.html",
+      "webfonts/*",
+      "*.woff2",
+      "*.tff",
       "assets/*",
       "javascripts/*",
-      "styles/*"
+      "styles/*",
+      "css/fontawesome-all.css",
+      "webfonts/fa-regular-400.woff2",
+      "webfonts/fa-brands-400.ttf"
     ],
     "matches": ["<all_urls>"]
   }]

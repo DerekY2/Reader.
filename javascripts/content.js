@@ -686,7 +686,23 @@ function saveStorageValue(storage, val) {
   chrome.storage.sync.set({[storage]: val});
 }
 
+
 function setFontFamily(doc, val, save) {
+  if(previousFontFamily == null){
+    previousFontFamily = val;
+    console.log("Font family: No previous data! Setting to - ", previousFontFamily)
+    showStyleSave(doc)
+  }
+  else if(previousFontFamily != val){
+    font_family_changed = true;
+    console.log("Font family: Change detected! Marked as changed! Previous:",previousFontFamily," New:",status)
+    showStyleSave(doc)
+  }
+  else if(previousFontFamily == val){
+    font_family_changed = false;
+    console.log("Font family: No change detected! Marked as unchanged! Previous:",previousFontFamily," New:",status)
+    showStyleSave(doc)
+  }
 
     cr_font_family = val;
     if(save){
@@ -696,7 +712,24 @@ function setFontFamily(doc, val, save) {
   $(doc).find(`#options-font-family select option[value='${val}']`).prop('selected', true);
 }
 function setFontSize(doc, val, save) {
- 
+  
+  if(previousFontSize == null){
+    previousFontSize = val;
+    console.log("Font size: No previous data! Setting to - ", previousFontSize)
+    showStyleSave(doc)
+  }
+  else if(previousFontSize != val){
+    font_size_changed = true;
+    console.log("Font size: Change detected! Marked as changed! Previous:",previousFontSize," New:",status)
+    showStyleSave(doc)
+  }
+  else if(previousFontSize == val){
+    font_size_changed = false;
+    console.log("Font size: No change detected! Marked as unchanged! Previous:",previousFontSize," New:",status)
+    showStyleSave(doc)
+  }
+
+
     cr_font_size = val;
     if(save){
     chrome.storage.sync.set({cr_font_size: val});
@@ -706,6 +739,22 @@ function setFontSize(doc, val, save) {
   $(doc).find("#options-font-size .val").text(  val );
 }
 function setLineHeight(doc, val, save) {
+
+  if(previousLineHeight == null){
+    previousLineHeight = val;
+    console.log("Line height: No previous data! Setting to - ", previousLineHeight)
+    showStyleSave(doc)
+  }
+  else if(previousLineHeight != val){
+    line_height_changed = true;
+    console.log("Line height: Change detected! Marked as changed! Previous:",previousLineHeight," New:",status)
+    showStyleSave(doc)
+  }
+  else if(previousLineHeight == val){
+    line_height_changed = false;
+    console.log("Line height: No change detected! Marked as unchanged! Previous:",previousLineHeight," New:",status)
+    showStyleSave(doc)
+  }
 
     cr_line_height = val;
     if(save){
@@ -717,6 +766,22 @@ function setLineHeight(doc, val, save) {
 }
 function setLetterSpace(doc, val, save) {
 
+  if(previousLetterSpace == null){
+    previousLetterSpace = val;
+    console.log("Letter space: No previous data! Setting to - ", previousLetterSpace)
+    showStyleSave(doc)
+  }
+  else if(previousLetterSpace != val){
+    letter_space_changed = true;
+    console.log("Letter space: Change detected! Marked as changed! Previous:",previousLetterSpace," New:",status)
+    showStyleSave(doc)
+  }
+  else if(previousLetterSpace == val){
+    letter_space_changed = false;
+    console.log("Letter space: No change detected! Marked as unchanged! Previous:",previousLetterSpace," New:",status)
+    showStyleSave(doc)
+  }
+
     cr_letter_space = val;
     if(save){
     chrome.storage.sync.set({cr_letter_space: val});
@@ -727,6 +792,22 @@ function setLetterSpace(doc, val, save) {
 }
 function setMaxWidth(doc, val, save) {
   
+  if(previousMaxWidth == null){
+    previousMaxWidth = val;
+    console.log("Max width: No previous data! Setting to - ", previousMaxWidth)
+    showStyleSave(doc)
+  }
+  else if(previousMaxWidth != val){
+    max_width_changed = true;
+    console.log("Max width: Change detected! Marked as changed! Previous:",previousMaxWidth," New:",status)
+    showStyleSave(doc)
+  }
+  else if(previousMaxWidth == val){
+    max_width_changed = false;
+    console.log("Max width: No change detected! Marked as unchanged! Previous:",previousMaxWidth," New:",status)
+    showStyleSave(doc)
+  }
+
     cr_max_width = val;
     if(save){
     chrome.storage.sync.set({cr_max_width: val});
@@ -961,8 +1042,6 @@ function setLinkColor(doc, val, theme, save) {
 }
 
 
-
-
 function setTheme(doc, val, save){
  
     cr_theme = val;
@@ -985,6 +1064,8 @@ function setTheme(doc, val, save){
     setForegroundColor(doc, cr_foreground_color_light.toUpperCase(), "light-theme");
     setTextColor(doc, cr_text_color_light.toUpperCase(), "light-theme");
     setLinkColor(doc, cr_link_color_light.toUpperCase(), "light-theme");
+
+    $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color_light.toUpperCase());
   
   } else if (val == "dark-theme"){
     showPalette(false, doc);
@@ -992,6 +1073,7 @@ function setTheme(doc, val, save){
     setForegroundColor(doc, cr_foreground_color_dark.toUpperCase(), "dark-theme");
     setTextColor(doc, cr_text_color_dark.toUpperCase(), "dark-theme");
     setLinkColor(doc, cr_link_color_dark.toUpperCase(), "dark-theme");
+    $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color_dark.toUpperCase());
 
   } else if (val == "custom-theme"){
     showPalette(true, doc);
@@ -999,6 +1081,8 @@ function setTheme(doc, val, save){
     setForegroundColor(doc, cr_foreground_color.toUpperCase(), "custom-theme");
     setTextColor(doc, cr_text_color.toUpperCase(), "custom-theme");
     setLinkColor(doc, cr_link_color.toUpperCase(), "custom-theme");
+    $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color.toUpperCase());
+    
    
   } else {
   }
@@ -1186,6 +1270,7 @@ function setDarkPanel(doc, status, save){
     console.log("Dark Panel: Change detected! Marked as changed! Previous:",previousDarkPanel," New:",status)
     showOptionsSave(doc)
   }
+  
   else if(previousDarkPanel == status){
     dark_panel_changed = false;
     console.log("Dark Panel: No change detected! Marked as unchanged! Previous:",previousDarkPanel," New:",status)
@@ -1209,8 +1294,6 @@ function setDarkPanel(doc, status, save){
     
   }
 }
-
-
 
 function setDisplayFooter(doc, status, save) {
 
@@ -1384,9 +1467,6 @@ function optionsMenu(iframe) {
 
 }
 
-
-
-
 function optionsPanelCloseHandler(doc){
   $(doc).click(function(e){
     target = $(e.target);
@@ -1403,41 +1483,6 @@ function optionsPanelCloseHandler(doc){
     }, 100);
   });
 }
-
-
-function optionsStyle(doc) {
-
-  // Listeners
-  $(doc).find("#options-font-family select").change(function() { setFontFamily(doc, $(this).val()); });
-  $(doc).find("#options-font-size input").on("input change", function() { setFontSize(doc, $(this).val()); });
-  $(doc).find("#options-line-height input").on("input change", function() { setLineHeight(doc, $(this).val()); });
-  $(doc).find("#options-letter-space input").on("input change", function() { setLetterSpace(doc, $(this).val()); });
-  $(doc).find("#options-max-width input").on("input change", function() { setMaxWidth(doc, $(this).val()); });
-
-  // Save
-  $(doc).find(".options-panel-content button[name='save-options-style']").click(function(e){
-    cr_font_family = $(doc).find("#options-font-family select").find(":selected").val();
-    cr_font_size = $(doc).find("#options-font-size input").val().trim();
-    cr_line_height = $(doc).find("#options-line-height input").val().trim();
-    cr_letter_space = $(doc).find("#options-letter-space input").val().trim();
-    cr_max_width = $(doc).find("#options-max-width input").val().trim();
-
-    saveStorageValue("cr_font_family", cr_font_family);
-    saveStorageValue("cr_font_size", cr_font_size);
-    saveStorageValue("cr_line_height", cr_line_height);
-    saveStorageValue("cr_letter_space", cr_letter_space);
-    saveStorageValue("cr_max_width", cr_max_width);
-
-    $("<span class='text-info'>Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
-  });
-}
-
-function getActiveTheme(doc){
-  // Get active theme
-  cr_theme = $(doc).find("#options-theme ul li a.active").attr("data-theme");
-  return cr_theme;
-}
-
 
 var font_family_changed;
 var font_size_changed;
@@ -1471,34 +1516,68 @@ var previousTextColor;
 var previousForegroundColor;
 var previousBackgroundColor;
 
+var previousFontFamily;
+var previousFontSize;
+var previousLineHeight;
+var previousLetterSpace;
+var previousMaxWidth;
+
+function optionsStyle(doc) {
+
+  // Listeners
+  $(doc).find("#options-font-family select").change(function() { setFontFamily(doc, $(this).val()); });
+  $(doc).find("#options-font-size input").on("input change", function() { setFontSize(doc, $(this).val()); });
+  $(doc).find("#options-line-height input").on("input change", function() { setLineHeight(doc, $(this).val()); });
+  $(doc).find("#options-letter-space input").on("input change", function() { setLetterSpace(doc, $(this).val()); });
+  $(doc).find("#options-max-width input").on("input change", function() { setMaxWidth(doc, $(this).val()); });
+
+  // Save
+  $(doc).find(".options-panel-content button[name='save-options-themes'], .options-panel-content button[name='save-options-style'], .options-panel-content button[name='save-options-reader-components']").click(function(e){
+    
+  }, showStyleSave(doc));
+}
+
+function getActiveTheme(doc){
+  // Get active theme
+  cr_theme = $(doc).find("#options-theme ul li a.active").attr("data-theme");
+  return cr_theme;
+}
+
 
 function showThemeSave(doc){
   if(background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
-    $(doc).find(".options-panel-content button[name='save-options-themes']").show();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").css("visibility","visible");
       console.log("show theme save")
   }else{
-    $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").css("visibility", "hidden");
       console.log("hide theme save")
+  }
+}
+
+
+function showStyleSave(doc){
+  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed){
+    $(doc).find(".options-panel-content button[name='save-options-style']").css("visibility","visible");
+      console.log("show style save")
+  }else{
+    $(doc).find(".options-panel-content button[name='save-options-style']").css("visibility", "hidden");
+      console.log("hide style save")
   }
 }
 
 function showOptionsSave(doc){
   if(dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed){
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").css("visibility","visible");
       console.log("show options save")
   }else{
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").css("visibility", "hidden");
       console.log("hide options save")
   }
+
 }
 
 function optionsTheme(doc) {
 
-  if(background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
-    showThemeSave(doc, true);
-  }else{
-    showThemeSave(doc, false);
-  }
 
   // Listeners
   $(doc).find("#options-theme ul li a").click(function() { cr_theme = $(this).attr("data-theme"); setTheme(doc, cr_theme); });
@@ -1509,13 +1588,89 @@ function optionsTheme(doc) {
   
 
   // Save
-  $(doc).find(".options-panel-content button[name='save-options-themes']").click(function(e){
+  $(doc).find(".options-panel-content button[name='save-options-themes'], .options-panel-content button[name='save-options-style'], .options-panel-content button[name='save-options-reader-components']").click(function(e){
+    
+    
+  }, showThemeSave(doc, false));
+}
+
+function optionsReaderComponents(doc) {
+  // Listeners
+  $(doc).find("#options-dark-panel input").change(function(){ setDarkPanel(doc, getCheckboxStatus($(this))); });
+  $(doc).find("#options-display-footer input").change(function(){ setDisplayFooter(doc, getCheckboxStatus($(this))); });
+  $(doc).find( "#options-display-outline input").change(function(){ setDisplayOutline(doc, getCheckboxStatus($(this))); });
+  $(doc).find( "#options-display-images input").change(function(){ setDisplayImages(doc, getCheckboxStatus($(this))); });
+  $(doc).find( "#options-display-meta input").change(function(){ setDisplayMeta(doc, getCheckboxStatus($(this))); });
+  $(doc).find( "#options-display-author input").change(function(){ setDisplayAuthor(doc, getCheckboxStatus($(this))); });
+  $(doc).find( "#options-display-reading-time input").change(function(){ setDisplayReadingTime(doc, getCheckboxStatus($(this)))});
+  
+
+  // Save
+  $(doc).find(".options-panel-content button[name='save-options-themes'], .options-panel-content button[name='save-options-style'], .options-panel-content button[name='save-options-reader-components']").click(function(e){
+    
+    cr_font_family = $(doc).find("#options-font-family select").find(":selected").val();
+    cr_font_size = $(doc).find("#options-font-size input").val().trim();
+    cr_line_height = $(doc).find("#options-line-height input").val().trim();
+    cr_letter_space = $(doc).find("#options-letter-space input").val().trim();
+    cr_max_width = $(doc).find("#options-max-width input").val().trim();
+    
     cr_theme = getActiveTheme(doc);
     cr_background_color_active = $(doc).find("#options-background-color input[name='background_color']").val().trim().toUpperCase();
     cr_foreground_color_active = $(doc).find("#options-foreground-color input[name='foreground_color']").val().trim().toUpperCase();
     cr_text_color_active = $(doc).find("#options-text-color input[name='text_color']").val().trim().toUpperCase();
     cr_link_color_active = $(doc).find("#options-link-color input[name='link_color']").val().trim().toUpperCase();
     
+    cr_auto_dark_panel = getCheckboxStatus( $(doc).find("#options-dark-panel input") );
+    cr_display_footer = getCheckboxStatus( $(doc).find("#options-display-footer input") );
+    cr_display_outline = getCheckboxStatus( $(doc).find("#options-display-outline input") );
+    cr_display_images = getCheckboxStatus( $(doc).find("#options-display-images input") );
+    cr_display_meta = getCheckboxStatus( $(doc).find("#options-display-meta input") );
+    cr_display_author = getCheckboxStatus( $(doc).find("#options-display-author input") );
+    cr_display_reading_time = getCheckboxStatus( $(doc).find("#options-display-reading-time input") );
+    cr_display_saved_info = getCheckboxStatus( $(doc).find("#options-display-saved-info input") );
+
+    //////////////////////////////////////////
+
+
+    if(font_family_changed){
+      saveStorageValue("cr_font_family", cr_font_family);
+      console.log("font family saved - ", cr_font_family);
+      previousFontFamily = cr_font_family;
+      font_family_changed = false;
+    }else{console.log("font family not saved(no changes recorded)")};
+
+    if(font_size_changed){
+      saveStorageValue("cr_font_size", cr_font_size);
+      console.log("font size sved - ", cr_font_size);
+      previousFontSize = cr_font_size;
+      font_size_changed = false;
+    }else{console.log("font size not saved(no changes recorded)")};
+
+    if(line_height_changed){
+      saveStorageValue("cr_line_height", cr_line_height);
+      console.log("line height saved - ", cr_line_height);
+      previousLineHeight = cr_line_height;
+      font_size_changed = false;
+    }else{console.log("line height not saved(no changes recorded)")};
+
+    if(letter_space_changed){
+      saveStorageValue("cr_letter_space", cr_letter_space);
+      console.log("letter space changed - ", cr_letter_space);
+      previousLetterSpace = cr_letter_space;
+      letter_space_changed = false;
+    }else{console.log("letter space not saved(no changes recorded)")};
+
+    if(max_width_changed){
+      saveStorageValue("cr_max_width", cr_max_width);
+      console.log("max width saved - ", max_width_changed);
+      previousMaxWidth = cr_max_width;
+      max_width_changed = false;
+    }else{console.log("max width not saved(no changes recorded)")}
+
+    showStyleSave(doc);
+    //$("<span class='text-info' >Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
+
+    ////////////////////////////////////////////////
 
     
     if (cr_theme == "light-theme") {
@@ -1581,34 +1736,8 @@ function optionsTheme(doc) {
     } else {
     }
     setTheme(doc, cr_theme);
-    
+    showThemeSave(doc)
     console.log("saved theme")
-    $("<span class='text-info'>Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
-  }, showThemeSave(doc, false));
-}
-
-function optionsReaderComponents(doc) {
-  // Listeners
-  $(doc).find("#options-dark-panel input").change(function(){ setDarkPanel(doc, getCheckboxStatus($(this))); });
-  $(doc).find("#options-display-footer input").change(function(){ setDisplayFooter(doc, getCheckboxStatus($(this))); });
-  $(doc).find( "#options-display-outline input").change(function(){ setDisplayOutline(doc, getCheckboxStatus($(this))); });
-  $(doc).find( "#options-display-images input").change(function(){ setDisplayImages(doc, getCheckboxStatus($(this))); });
-  $(doc).find( "#options-display-meta input").change(function(){ setDisplayMeta(doc, getCheckboxStatus($(this))); });
-  $(doc).find( "#options-display-author input").change(function(){ setDisplayAuthor(doc, getCheckboxStatus($(this))); });
-  $(doc).find( "#options-display-reading-time input").change(function(){ setDisplayReadingTime(doc, getCheckboxStatus($(this)))});
-  
-
-  // Save
-  $(doc).find(".options-panel-content button[name='save-options-reader-components']").click(function(e){
-    
-    cr_auto_dark_panel = getCheckboxStatus( $(doc).find("#options-dark-panel input") );
-    cr_display_footer = getCheckboxStatus( $(doc).find("#options-display-footer input") );
-    cr_display_outline = getCheckboxStatus( $(doc).find("#options-display-outline input") );
-    cr_display_images = getCheckboxStatus( $(doc).find("#options-display-images input") );
-    cr_display_meta = getCheckboxStatus( $(doc).find("#options-display-meta input") );
-    cr_display_author = getCheckboxStatus( $(doc).find("#options-display-author input") );
-    cr_display_reading_time = getCheckboxStatus( $(doc).find("#options-display-reading-time input") );
-    cr_display_saved_info = getCheckboxStatus( $(doc).find("#options-display-saved-info input") );
 
 
     if(dark_panel_changed){
@@ -1673,11 +1802,43 @@ function optionsReaderComponents(doc) {
     }else{
       console.log("read time not saved(no changes recorded)")
     }
-    $("<span class='text-info save-notice-one' style='display:inline-block; height:35px'>Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
-    showOptionsSave(doc)
+    showOptionsSave(doc);
+
     
     
+    showToast(doc, 'success', cr_foreground_color_active, '<i class="fas fa-check-circle"></i></i> Successfully Saved!');
+
   },showOptionsSave(doc));
+
+  
+
+}
+
+function showToast(doc, type, bgColor, message){
+  let toast = doc.createElement('div');
+  
+  toast.classList.add("toast");
+  toast.innerHTML = message;
+  $(doc).find("#toastBox").append(toast);
+  $(doc).find(".toast").css({"background-color": bgColor});
+
+  if(type == 'success'){
+    toast.classList.add('success');
+  }
+  if(type == 'warning'){
+    toast.classList.add('warning');
+  }
+  if(type == 'error'){
+    toast.classList.add('error');
+  }
+
+  $(doc).find(".toast").click(function(e){
+    toast.remove();
+  })
+
+  setTimeout(()=>{
+    toast.remove();
+  }, 5000); // 1000ms = 1s
 }
 
 
@@ -1881,5 +2042,6 @@ function removeIframe() {
     console.log("removed iframe - ");
     document.body.style.overflow = 'auto';
 }
+
 
 launch();
