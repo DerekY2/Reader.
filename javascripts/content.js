@@ -1806,7 +1806,7 @@ function optionsReaderComponents(doc) {
 
     
     
-    showToast(doc, 'success', cr_foreground_color_active, '<i class="fas fa-check-circle"></i></i> Successfully Saved!');
+    showToast(doc, 'success', '<i class="fas fa-check-circle"></i></i> Successfully Saved!');
 
   },showOptionsSave(doc));
 
@@ -1814,13 +1814,14 @@ function optionsReaderComponents(doc) {
 
 }
 
-function showToast(doc, type, bgColor, message){
+function showToast(doc, type, message){
   let toast = doc.createElement('div');
   
   toast.classList.add("toast");
   toast.innerHTML = message;
   $(doc).find("#toastBox").append(toast);
-  $(doc).find(".toast").css({"background-color": bgColor});
+  //$(doc).find(".toast").css({"background-color": '#464545'});
+  $(doc).find(".toast").css({"text-color": 'black'});
 
   if(type == 'success'){
     toast.classList.add('success');
@@ -1833,7 +1834,7 @@ function showToast(doc, type, bgColor, message){
   }
 
   $(doc).find(".toast").click(function(e){
-    toast.remove();
+    $(this).remove();
   })
 
   setTimeout(()=>{

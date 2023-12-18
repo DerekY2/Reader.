@@ -348,6 +348,7 @@ html {
   transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.35);
   border-left: 9px solid green;
   border-radius: 10px;
+  color:#414141
 
 }
 @keyframes moveleft{
