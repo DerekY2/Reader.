@@ -136,7 +136,6 @@ var cr_display_meta = "on";
 var cr_display_author = "on";
 var cr_display_reading_time = "on";
 
-
 function showPalette(show, doc){
   if(!show){
     $(doc).find("#options-background-color").hide();
@@ -984,7 +983,13 @@ function setTextColor(doc, val, theme, save) {
   } else {
   }
 
-  $(doc).find("#cr-body").css( "color", val );
+  $(doc).find("#cr-body").css("color", val);
+  $(doc).find("#cr-outline a").css("color", val);
+  $(doc).find("#cr-content table td").css("color", val);
+  $(doc).find("#cr-content table tr").css("color", val);
+  $(doc).find("#cr-content table th").css("color", val);
+  $(doc).find("#cr-content table").css("border-color", val);
+
 
   $(doc).find("#options-text-color input[name='text_color']").val(  val );
   $(doc).find("#options-text-color input[type='color']").val(  val );
@@ -1034,7 +1039,7 @@ function setLinkColor(doc, val, theme, save) {
     }
   } else {
   }
-  $(doc).find("#cr-body").find("a").css( "color", val );
+  $(doc).find("#cr-body").find("a:not(#cr-outline a)").css( "color", val );
 
   $(doc).find("#options-link-color input[name='link_color']").val(  val );
   $(doc).find("#options-link-color input[type='color']").val(  val );
@@ -1443,7 +1448,6 @@ function optionsMenu(iframe) {
 
   // Print
   $(doc).find("#options-print").click(function(){
-
     $(doc).find("#reader-foreground").css({"box-shadow":"0 0px 0px rgba(0, 0, 0, 0.1)"});
     iframe.contentWindow.print();
     $(doc).find("#reader-foreground").css({"box-shadow":"0 8px 16px rgba(0, 0, 0, 0.1)"});
@@ -1545,32 +1549,47 @@ function getActiveTheme(doc){
 
 
 function showThemeSave(doc){
-  if(background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
-    $(doc).find(".options-panel-content button[name='save-options-themes']").css("visibility","visible");
+  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+    $(doc).find(".options-panel-content button[name='save-options-style']").show();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").show();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+    removeSaveLabel(doc)
       console.log("show theme save")
   }else{
-    $(doc).find(".options-panel-content button[name='save-options-themes']").css("visibility", "hidden");
+    $(doc).find(".options-panel-content button[name='save-options-style']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
       console.log("hide theme save")
   }
 }
 
 
 function showStyleSave(doc){
-  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed){
-    $(doc).find(".options-panel-content button[name='save-options-style']").css("visibility","visible");
+  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+    $(doc).find(".options-panel-content button[name='save-options-style']").show();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").show();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+    removeSaveLabel(doc)
       console.log("show style save")
   }else{
-    $(doc).find(".options-panel-content button[name='save-options-style']").css("visibility", "hidden");
+    $(doc).find(".options-panel-content button[name='save-options-style']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
       console.log("hide style save")
   }
 }
 
 function showOptionsSave(doc){
-  if(dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed){
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").css("visibility","visible");
+  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+    $(doc).find(".options-panel-content button[name='save-options-style']").show();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").show();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+    removeSaveLabel(doc);
       console.log("show options save")
   }else{
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").css("visibility", "hidden");
+    $(doc).find(".options-panel-content button[name='save-options-style']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
+    $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
       console.log("hide options save")
   }
 
@@ -1603,6 +1622,37 @@ function optionsReaderComponents(doc) {
   $(doc).find( "#options-display-meta input").change(function(){ setDisplayMeta(doc, getCheckboxStatus($(this))); });
   $(doc).find( "#options-display-author input").change(function(){ setDisplayAuthor(doc, getCheckboxStatus($(this))); });
   $(doc).find( "#options-display-reading-time input").change(function(){ setDisplayReadingTime(doc, getCheckboxStatus($(this)))});
+  
+  $(doc).find("#sitelinkcopy").click(function (event) {
+    event.preventDefault();
+    var linkElement = $(this);
+    var hrefLink = linkElement.attr('href');
+  
+    if (hrefLink) {
+      // Copy the link to the clipboard
+      navigator.clipboard.writeText(hrefLink).then(() => {
+        console.log("Copied link - ", hrefLink);
+  
+        // Hide the original link
+        linkElement.hide();
+  
+        // Create a new element for the message
+        var messageElement = $('<span class="copy-message">Link copied!</span>');
+  
+        // Insert the message after the original link
+        linkElement.after(messageElement);
+  
+        // After 1000 milliseconds (1 second), show the original link and remove the message
+        setTimeout(function () {
+          messageElement.remove();
+          linkElement.show();
+        }, 1000);
+      });
+    } else {
+      console.log("Href attribute not found.");
+    }
+  });
+  
   
 
   // Save
@@ -1668,7 +1718,8 @@ function optionsReaderComponents(doc) {
     }else{console.log("max width not saved(no changes recorded)")}
 
     showStyleSave(doc);
-    //$("<span class='text-info' >Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
+
+
 
     ////////////////////////////////////////////////
 
@@ -1806,7 +1857,8 @@ function optionsReaderComponents(doc) {
 
     
     
-    showToast(doc, 'success', '<i class="fas fa-check-circle"></i></i> Successfully Saved!');
+    //showToast(doc, 'success', '<i class="fas fa-check-circle"></i></i> Successfully Saved!', e);
+    showSaveLabel(doc, e)
 
   },showOptionsSave(doc));
 
@@ -1814,33 +1866,107 @@ function optionsReaderComponents(doc) {
 
 }
 
-function showToast(doc, type, message){
-  let toast = doc.createElement('div');
-  
-  toast.classList.add("toast");
-  toast.innerHTML = message;
-  $(doc).find("#toastBox").append(toast);
-  //$(doc).find(".toast").css({"background-color": '#464545'});
-  $(doc).find(".toast").css({"text-color": 'black'});
+function showToast(doc, type, message, e){
 
-  if(type == 'success'){
-    toast.classList.add('success');
-  }
-  if(type == 'warning'){
-    toast.classList.add('warning');
-  }
-  if(type == 'error'){
-    toast.classList.add('error');
-  }
+  if(type = 'copylink'){
+    let toast = doc.createElement('div');
+    var toastTimeout;
+    
+    toast.classList.add("toast");
+    toast.innerHTML = message;
+    $(doc).find("#toastBox").append(toast);
+    //$(doc).find(".toast").css({"background-color": '#464545'});
+    $(doc).find(".toast").css({"text-color": 'black'});
 
-  $(doc).find(".toast").click(function(e){
-    $(this).remove();
-  })
+    // if(type == 'success'){
+    //   toast.classList.add('success');
+    //   toastTimeout = 4000;
+    // }
+    // if(type == 'warning'){
+    //   toast.classList.add('warning');
+    //   toastTimeout = 5000;
+    // }
+    // if(type == 'error'){
+    //   toast.classList.add('error');
+    //   toastTimeout = 6000;
+    // }
+    if(type == 'copylink'){
+      toast.classList.add('copylink');
+      toastTimeout = 2400;
+    }
 
-  setTimeout(()=>{
-    toast.remove();
-  }, 5000); // 1000ms = 1s
+    $(doc).find(".toast").click(function(e){
+      $(this).remove();
+    })
+
+    setTimeout(()=>{
+      toast.remove();
+    }, toastTimeout); // 1000ms = 1s
+  }
 }
+
+function showSaveLabel(doc, e){
+  //$("<span class='text-info' >Saved!</span>").insertAfter( $(e.target) ).fadeOut(1500, function() { $(this).remove() });
+
+    // Create the text label element
+    var textLabel = $("<span class='text-info save-label' id='ui-save-label'>Saved!</span>");
+    var button = $(e.target).attr('name');
+
+    // Get the font properties of the save button
+
+    // Set the text label's height to match the save button's height
+
+    if(button == 'save-options-reader-components'){
+      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonPadding = 10;
+    }
+    else if(button == 'save-options-themes'){
+      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonPadding = 20;
+    }
+    else if(button == 'save-options-style'){
+      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonPadding = 30;
+    }
+    
+    
+
+    var buttonFont = {
+      'font-family': $(e.target).css('font-family'),
+      'font-size': $(e.target).css('font-size'),
+      'font-weight': $(e.target).css('font-weight'),
+      'font-style': $(e.target).css('font-style'),
+      'color': $(e.target).css('color'),
+      // Add more properties as needed
+    };
+
+    // Apply the font properties to the text label
+    textLabel.css(buttonFont);
+    textLabel.css('height', buttonHeight + 'px');
+    textLabel.css('padding-top', buttonPadding + 'px');
+    console.log("e: ", $(e.target).attr('name'), ', height: ', buttonHeight, ', padding: ', buttonPadding);
+
+    // Insert the text label after the target element (save button)
+    textLabel.insertAfter($(e.target));
+
+    // Perform fadeOut and remove after a certain duration
+    textLabel.fadeOut(1500, function() {
+      $(this).remove();
+    });
+}
+
+function removeSaveLabel(doc) {
+  // Find the text label using its class or another identifier
+  var textLabel = $(doc).find("#ui-save-label");
+  
+  // Check if the element exists before attempting to remove it
+  if (textLabel.length > 0) {
+    // Remove the text label
+    textLabel.remove();
+    console.log("SAVE LABEL REMOVED");
+  }else{console.log("NO SAVE LABEL FOUND")};
+}
+
 
 
 
@@ -1883,6 +2009,7 @@ function markAsChanged(changedElement){
   }
   console.log("changed value #", changedElement);
 }
+
 
 
 function init(){
@@ -1930,7 +2057,7 @@ function init(){
     $(doc).find("#cr-content a").attr("target", "_blank");
     // Add meta, title, and reading-time
     if (article_url) {
-      $(doc).find("#cr-meta").append("<li id='cr-meta-url'><i class='fas fa-link'></i><span class='truncated'><a href='"+article_url+"' target='_blank'>"+article_url+"</a></span><li>");
+      $(doc).find("#cr-meta").append("<li id='cr-meta-url'><i class='fas fa-link'></i><span class='truncated'><a id='sitelinkcopy' href='"+article_url+"'  target='_blank' >"+article_url+"</a></span><li>");
     }
     if (author) {
       $(doc).find("#cr-meta").append("<li id='cr-meta-author'><i class='fas fa-pen-fancy'></i><span class='cr-author truncated'>"+author+"</span><li>");
@@ -2046,3 +2173,4 @@ function removeIframe() {
 
 
 launch();
+

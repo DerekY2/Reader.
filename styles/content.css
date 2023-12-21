@@ -74,6 +74,7 @@ html {
 
 #cr-body a{
   color: inherit;
+  transition: .3s;
 }
 #cr-body a:hover{
   cursor: pointer;
@@ -100,17 +101,20 @@ html {
   padding-left: 0px;
   height: 600px;
   overflow-y: auto;
+  transition: .3s;
 }
 #cr-outline li{
   list-style-type: none;
   margin-top: 7px;
   margin-bottom: 15px;
+  transition: .3s;
 }
 #cr-outline li a {
   color: #484849;
   font-size: 14px;
   line-height: 1em !important;
   text-decoration: none;
+  transition: .3s;
 }
 #cr-outline li a:hover {
   text-decoration: underline !important;
@@ -367,11 +371,16 @@ html {
   border-radius: 10px;
 }
 
+.toast.copylink{
+  border-left: 9px solid #0095ff;
+  border-radius: 10px
+}
+
 .toast i{
   margin: 0 20px;
   font-size: 35px;
   border-radius: 10px;
-  border-left: 9;
+  border-left: 9px;
 
   color:green;
 }
@@ -379,13 +388,19 @@ html {
 .toast.warning i{
   color:orange;
   border-radius:10px;
-  border-left: 9;
+  border-left: 9px;
 }
 
 .toast.error i{
   color:red;
   border-radius: 10px;
-  border-left: 9;
+  border-left: 9px;
+}
+
+.toast.copylink i{
+  color:#0095ff;
+  border-left: 9px;
+  border-radius: 10px
 }
 
 .toast::after{
@@ -397,7 +412,7 @@ html {
   height: 3px;
   background: green;
   
-  animation: anim 5s linear forwards;
+  animation: anim 4s linear forwards;
 
 }
 @keyframes anim{
@@ -408,8 +423,15 @@ html {
 
 .toast.warning::after{
   background: orange;
+  animation: anim 5s linear forwards;
 }
 
 .toast.error::after{
   background: red;
+  animation: anim 5s linear forwards;
+}
+
+.toast.copylink::after{
+  background: #0095ff;
+  animation: anim 2.4s linear forwards;
 }
