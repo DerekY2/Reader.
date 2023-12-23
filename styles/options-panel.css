@@ -151,6 +151,8 @@
   opacity: 0.9;
 }
 
+
+
 #cr-container .options-panel-content .btn:hover, #options-saved-panel-body .btn:hover{
   cursor: pointer;
   opacity: 1;
@@ -158,10 +160,11 @@
 #cr-container .options-panel-content button:hover{
   cursor: pointer;
 }
-#cr-container .options-panel-content .btn.btn-save-changes{
+#cr-container .options-panel-content .btn-save-changes{
   margin-bottom: 10px;
 
 }
+
 
 
 
@@ -625,6 +628,9 @@
   color: #AAAAAD !important;
   font-weight: 500 !important;
 }
+
+
+
 #cr-container .options-panel-dark .options-panel-content .btn,
 #cr-container .options-panel-dark #options-saved-panel-body .btn{
   border: 1px solid #ddd;
@@ -647,4 +653,99 @@
 }
 #cr-container #options-saved-panel.options-panel-dark hr{
   border: 1px solid #292a32 !important;
+}
+
+.custom-theme-option{
+  visibility: hidden;
+}
+
+
+
+.btn-save-changes{
+  width:125px;
+  height:30px;
+  border: 1px solid #ddd;
+  padding: 7px 13px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+  background: transparent;
+  color: #fff !important;
+  outline: 0;
+  opacity: 0.9;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.btn-save-changes:hover{
+  width:135px;
+  background:rgb(71, 71, 71);
+  cursor: pointer;
+  opacity: 1;
+  box-shadow: 0px 10px 10px rgba(195, 195, 195, 0.4);
+}
+
+.btn-save-changes span, .btn-save-changes svg{
+  position:absolute;
+  color:white;
+  fill:transparent;
+  transition: 0.3s;
+}
+
+.btn-save-changes:hover span{
+  transition:0.1s;
+  
+}
+
+.btn-save-changes:focus{
+  outline:none;
+  box-shadow:none;
+  border: 2px solid transparent;
+  width: 30px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  animation: spin 0.7s 500ms forwards;
+}
+
+.btn-save-changes:focus span{
+  color:transparent;
+}
+
+.btn-save-changes:focus svg{
+  animation: check 200ms 900ms forwards;
+}
+
+@keyframes spin{
+  80%{
+    border: 2px solid transparent;
+    border-left: 2px solid white;
+  }
+  100%{
+    transform:rotate(360deg);
+    border:2px solid white;
+  }
+}
+
+@keyframes check{
+  to {
+    fill: white;
+  }
+}
+
+@keyframes circle{
+  to{
+    border: 2px solid white;
+  }
+}
+
+.selectnone {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }

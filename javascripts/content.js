@@ -129,7 +129,7 @@ var cr_text_color = "#333333";
 var cr_link_color = "#5F6368";
 var cr_theme = "custom-theme";
 var cr_dark_panel = "on";
-var cr_display_footer = "off";
+var cr_display_footer = "on";
 var cr_display_outline = "off";
 var cr_display_images = "on";
 var cr_display_meta = "on";
@@ -1098,18 +1098,18 @@ function setDisplayOutline(doc, status, save) {
   if(previousOutline == null){
     previousOutline = status;
     console.log("Display: No previous data! Setting to - ", previousOutline)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousOutline != status){
     outline_changed = true;
     console.log("Display: Change detected! Marked as changed! Previous:",previousOutline," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousOutline == status){
     outline_changed = false;
     console.log("Display: No change detected! Marked as unchanged! Previous:",previousOutline," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   if (status == "on") {
     $(doc).find('#cr-outline').show();
@@ -1130,18 +1130,18 @@ function setDisplayImages(doc, status, save) {
   if(previousImages == null){
     previousImages = status;
     console.log("Images: No previous data! Setting to - ", previousImages)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousImages != status){
     images_changed = true;
     console.log("Images: Change detected! Marked as changed! Previous:",previousImages," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousImages == status){
     images_changed = false;
     console.log("Images: No change detected! Marked as unchanged! Previous:",previousImages," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   if (status == "on") {
     $(doc).find('#cr-content-container img').show();
@@ -1164,25 +1164,29 @@ function setDisplayMeta(doc, status, save) {
   if(previousMeta == null){
     previousMeta = status;
     console.log("Meta: No previous data! Setting to - ", previousMeta)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousMeta != status){
     meta_changed = true;
     console.log("Meta: Change detected! Marked as changed! Previous:",previousMeta," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousMeta == status){
     meta_changed = false;
     console.log("Meta: No change detected! Marked as unchanged! Previous:",previousMeta," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   if (status == "on") {
     $(doc).find('#cr-container #cr-meta').show();
     $(doc).find('#options-display-meta input').prop("checked", true);
+    $(doc).find('#options-display-author').show();
+    $(doc).find('#options-display-reading-time').show();
   } else {
     $(doc).find('#cr-container #cr-meta').hide();
     $(doc).find('#options-display-meta input').prop("checked", false);
+    $(doc).find('#options-display-author').hide();
+    $(doc).find('#options-display-reading-time').hide();
   }
   if (save) {
     cr_display_meta = status;
@@ -1200,18 +1204,18 @@ function setDisplayAuthor(doc, status, save) {
   if(previousAuthor == null){
     previousAuthor = status;
     console.log("Author: No previous data! Setting to - ", previousAuthor)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousAuthor != status){
     author_changed = true;
     console.log("Author: Change detected! Marked as changed! Previous:",previousAuthor," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousAuthor == status){
     author_changed = false;
     console.log("Author: No change detected! Marked as unchanged! Previous:",previousAuthor," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   if (status == "on") {
     $(doc).find('#cr-container #cr-meta-author').show();
@@ -1232,18 +1236,18 @@ function setDisplayReadingTime(doc, status, save) {
   if(previousReadTime == null){
     previousReadTime = status;
     console.log("ReadTime: No previous data! Setting to - ", previousReadTime)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousReadTime != status){
     read_time_changed = true;
     console.log("ReadTime: Change detected! Marked as changed! Previous:",previousReadTime," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousReadTime == status){
     read_time_changed = false;
     console.log("ReadTime: No change detected! Marked as unchanged! Previous:",previousReadTime," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   if (status == "on") {
     $(doc).find('#cr-container #cr-meta-reading-time').show();
@@ -1267,19 +1271,19 @@ function setDarkPanel(doc, status, save){
   if(previousDarkPanel == null){
     previousDarkPanel = status;
     console.log("Dark Panel: No previous data! Setting to - ", previousDarkPanel)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
 
   }
   else if(previousDarkPanel != status){
     dark_panel_changed = true;
     console.log("Dark Panel: Change detected! Marked as changed! Previous:",previousDarkPanel," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   
   else if(previousDarkPanel == status){
     dark_panel_changed = false;
     console.log("Dark Panel: No change detected! Marked as unchanged! Previous:",previousDarkPanel," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
 
   if (status == "on") {
@@ -1305,24 +1309,24 @@ function setDisplayFooter(doc, status, save) {
   if(previousFooter == null){
     previousFooter = status;
     console.log("Footer: No previous data! Setting to - ", previousFooter)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousFooter != status){
     footer_changed = true;
     console.log("Footer: Change detected! Marked as changed! Previous:",previousFooter," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
   else if(previousFooter == status){
     footer_changed = false;
     console.log("Footer: No change detected! Marked as unchanged! Previous:",previousFooter," New:",status)
-    showOptionsSave(doc)
+    showOptionsSave(doc, 0)
   }
 
   if (status == "on") {
-    $(doc).find('#cr-container #cr-footer').hide();
+    $(doc).find('#cr-container #cr-footer').show();
     $(doc).find('#options-display-footer input').prop("checked", true);
   } else {
-    $(doc).find('#cr-container #cr-footer').show();
+    $(doc).find('#cr-container #cr-footer').hide();
     $(doc).find('#options-display-footer input').prop("checked", false);
   }
   if (save) {
@@ -1391,7 +1395,7 @@ function optionsDefaultSettings(doc) {
 
   // Reader Components
   chrome.storage.sync.get(['cr_dark_panel'],function(result){setDarkPanel(doc, (result.cr_dark_panel) ? result.cr_dark_panel : "on", true) });
-  chrome.storage.sync.get(['cr_display_footer'],function(result){setDisplayFooter(doc, (result.cr_display_footer) ? result.cr_display_footer : "off", true) });
+  chrome.storage.sync.get(['cr_display_footer'],function(result){setDisplayFooter(doc, (result.cr_display_footer) ? result.cr_display_footer : "on", true) });
   chrome.storage.sync.get(['cr_display_outline'],function(result){setDisplayOutline(doc, (result.cr_display_outline) ? result.cr_display_outline : "off", true) });
   chrome.storage.sync.get(['cr_display_images'],function(result){setDisplayImages(doc, (result.cr_display_images) ? result.cr_display_images : "on", true) });
   chrome.storage.sync.get(['cr_display_meta'],function(result){setDisplayMeta(doc, (result.cr_display_meta) ? result.cr_display_meta : "on", true) });
@@ -1547,53 +1551,115 @@ function getActiveTheme(doc){
   return cr_theme;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var showSaveTimeout;
+var saving = false;
+
+let themeSaveTimeout;
+let styleSaveTimeout;
+let optionsSaveTimeout;
 
 function showThemeSave(doc){
+  
+  
   if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
     $(doc).find(".options-panel-content button[name='save-options-style']").show();
     $(doc).find(".options-panel-content button[name='save-options-themes']").show();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
     removeSaveLabel(doc)
       console.log("show theme save")
+      saving = false;
+      clearTimeout(themeSaveTimeout);
+      clearTimeout(optionsSaveTimeout);
+      clearTimeout(styleSaveTimeout);
   }else{
+    if(saving){
+      showSaveTimeout = 2500;
+
+    }
+    else if(!saving){
+      showSaveTimeout = 0;
+    }
+    themeSaveTimeout = setTimeout(()=>{
     $(doc).find(".options-panel-content button[name='save-options-style']").hide();
     $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-      console.log("hide theme save")
+      console.log("hide theme save - Timeout set")
+
+      saving = false;
+    }, showSaveTimeout);
   }
+  
 }
 
 
 function showStyleSave(doc){
+  
+
+  
   if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
     $(doc).find(".options-panel-content button[name='save-options-style']").show();
     $(doc).find(".options-panel-content button[name='save-options-themes']").show();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
     removeSaveLabel(doc)
       console.log("show style save")
+      saving = false;
+      clearTimeout(themeSaveTimeout);
+      clearTimeout(optionsSaveTimeout);
+      clearTimeout(styleSaveTimeout);
   }else{
+    if(saving){
+      showSaveTimeout = 2500;
+
+    }
+    else if(!saving){
+      showSaveTimeout = 0;
+    }
+    styleSaveTimeout = setTimeout(()=>{
     $(doc).find(".options-panel-content button[name='save-options-style']").hide();
     $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-      console.log("hide style save")
+      console.log("hide style save - Timeout set")
+
+      saving = false;
+    }, showSaveTimeout);
   }
+
 }
 
 function showOptionsSave(doc){
-  if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
-    $(doc).find(".options-panel-content button[name='save-options-style']").show();
-    $(doc).find(".options-panel-content button[name='save-options-themes']").show();
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
-    removeSaveLabel(doc);
-      console.log("show options save")
-  }else{
-    $(doc).find(".options-panel-content button[name='save-options-style']").hide();
-    $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
-    $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-      console.log("hide options save")
-  }
+  
+
+  
+    if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+      $(doc).find(".options-panel-content button[name='save-options-style']").show();
+      $(doc).find(".options-panel-content button[name='save-options-themes']").show();
+      $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+      removeSaveLabel(doc);
+        console.log("show options save")
+        saving = false;
+        clearTimeout(themeSaveTimeout);
+        clearTimeout(optionsSaveTimeout);
+        clearTimeout(styleSaveTimeout);
+    }else{
+      if(saving){
+        showSaveTimeout = 2500;
+
+      }
+      else if(!saving){
+        showSaveTimeout = 0;
+      }
+      optionsSaveTimeout = setTimeout(()=>{
+      $(doc).find(".options-panel-content button[name='save-options-style']").hide();
+      $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
+      $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
+        console.log("hide options save - Timeout set")
+        saving = false;
+      }, showSaveTimeout);
+    }
 
 }
+
 
 function optionsTheme(doc) {
 
@@ -1717,6 +1783,7 @@ function optionsReaderComponents(doc) {
       max_width_changed = false;
     }else{console.log("max width not saved(no changes recorded)")}
 
+    saving = true;
     showStyleSave(doc);
 
 
@@ -1787,6 +1854,7 @@ function optionsReaderComponents(doc) {
     } else {
     }
     setTheme(doc, cr_theme);
+    saving = true;
     showThemeSave(doc)
     console.log("saved theme")
 
@@ -1853,12 +1921,14 @@ function optionsReaderComponents(doc) {
     }else{
       console.log("read time not saved(no changes recorded)")
     }
+    
+    saving = true;
     showOptionsSave(doc);
 
     
     
     //showToast(doc, 'success', '<i class="fas fa-check-circle"></i></i> Successfully Saved!', e);
-    showSaveLabel(doc, e)
+    //showSaveLabel(doc, e)
 
   },showOptionsSave(doc));
 
@@ -1910,33 +1980,34 @@ function showSaveLabel(doc, e){
 
     // Create the text label element
     var textLabel = $("<span class='text-info save-label' id='ui-save-label'>Saved!</span>");
-    var button = $(e.target).attr('name');
+    var button = $($(e.target).closest('button')).attr('name'); // Find the closest button ancestor
+    console.log("target: ",$(e.target));
 
     // Get the font properties of the save button
 
     // Set the text label's height to match the save button's height
 
     if(button == 'save-options-reader-components'){
-      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonHeight = $(e.target).closest('button').outerHeight() * 1.0; // Get the outer height of the save button
       var buttonPadding = 10;
     }
     else if(button == 'save-options-themes'){
-      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonHeight = $(e.target).closest('button').outerHeight() * 1.0; // Get the outer height of the save button
       var buttonPadding = 20;
     }
     else if(button == 'save-options-style'){
-      var buttonHeight = $(e.target).outerHeight() * 1.0; // Get the outer height of the save button
+      var buttonHeight = $(e.target).closest('button').outerHeight() * 1.0; // Get the outer height of the save button
       var buttonPadding = 30;
     }
     
     
 
     var buttonFont = {
-      'font-family': $(e.target).css('font-family'),
-      'font-size': $(e.target).css('font-size'),
-      'font-weight': $(e.target).css('font-weight'),
+      'font-family': $(e.target).closest('button').css('font-family'),
+      'font-size': $(e.target).closest('button').css('font-size'),
+      'font-weight': $(e.target).closest('button').css('font-weight'),
       'font-style': $(e.target).css('font-style'),
-      'color': $(e.target).css('color'),
+      'color': $(e.target).closest('button').css('color'),
       // Add more properties as needed
     };
 
@@ -1944,10 +2015,10 @@ function showSaveLabel(doc, e){
     textLabel.css(buttonFont);
     textLabel.css('height', buttonHeight + 'px');
     textLabel.css('padding-top', buttonPadding + 'px');
-    console.log("e: ", $(e.target).attr('name'), ', height: ', buttonHeight, ', padding: ', buttonPadding);
+    console.log("e: ", $(e.target).closest('button').attr('name'), ', height: ', buttonHeight, ', padding: ', buttonPadding);
 
     // Insert the text label after the target element (save button)
-    textLabel.insertAfter($(e.target));
+    textLabel.insertAfter($(e.target).closest('button'));
 
     // Perform fadeOut and remove after a certain duration
     textLabel.fadeOut(1500, function() {
