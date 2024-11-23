@@ -7,7 +7,7 @@
   
   "short_name": "Reader.",
 
-  "version": "0.5.8",
+  "version": "0.5.9",
   
   "description": "Reader Mode for Chrome",
 
@@ -17,7 +17,7 @@
     "128": "assets/images/icon128.png"
   },
 
-  "permissions": [ "tabs", "activeTab", "contextMenus", "storage", "scripting" ],
+  "permissions": [ "activeTab", "contextMenus", "storage", "scripting" ],
 
   "content_security_policy": {
     "sandbox": "sandbox allow-scripts; 'unsafe-inline' 'self'"

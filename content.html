@@ -134,13 +134,22 @@
         </div>
         <div class="center-btn-container">
           <button name="save-options-style" class="btn-save-changes m-t-20">
-            <span>Save changes</span>
+            <span class="save-span">Save changes</span>
           </button>
         </div>
       </div>
 
       <button class="options-panel-header"><i class="fas fa-swatchbook"></i> &nbsp;THEMES <i class="fas fa-chevron-down marker"></i></button>
-      <div class="options-panel-content">
+      <div class="options-panel-content" id="themes-panel">
+        
+        <div id="options-theme-sync" class="options-panel-content-section">
+          <label class="float-left">Sync to Device</label>
+          <div class="float-right m-t-7">
+            <input type="checkbox" id="cr_theme_sync" name="theme_sync" class="switch-input">
+            <label for="cr_theme_sync" class="switch-label"><span class="toggle--on"></span><span class="toggle--off"></span></label>
+          </div>
+        </div>
+
         <div id="options-theme" class="options-panel-content-section m-t-10">
           <label>Theme</label>
           <ul>
@@ -197,7 +206,7 @@
         </div>
         <div class="center-btn-container">
           <button name="save-options-themes" class="btn-save-changes m-t-10">
-            <span>Save changes</span>
+            <span class="save-span">Save changes</span>
           </button>
         </div>
         
@@ -267,7 +276,7 @@
         </div>
         <div class="center-btn-container">
           <button name="save-options-reader-components" class="btn-save-changes">
-            <span>Save changes</span>
+            <span class="save-span">Save changes</span>
           </button>
         </div>
         
@@ -275,7 +284,7 @@
     </div>
 
     
-  <section id = "reader-foreground" class = "main-stuff" style="padding: 40; padding-top: 15; border-radius: 5px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1)">
+  <section id = "reader-foreground" class = "main-stuff" style="padding: 40; padding-top: 15; border-radius: 5px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2)">
     <!-- Meta -->
     <ul id="cr-meta" style="display: none">
     </ul>
