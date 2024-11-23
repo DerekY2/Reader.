@@ -111,15 +111,15 @@ var cr_text_color_light = "#333333";
 var cr_link_color_light = "#5F6368";
 var cr_background_color_dark = "#35363a";
 var default_background_color_dark = "#35363a"
-var default_background_color_light = "#FFFFFF"
+var default_background_color_light = "#e6e6e6"
 var default_text_color_light = "#333333";
 var default_link_color_light = "#5F6368"
 var default_text_color_dark = "#E0E0E0"
 var default_linkcolor_dark = "#FFFFFF"
-var cr_foreground_color_light = "#ededed"
+var cr_foreground_color_light = "#e6e6e6"
 var cr_foreground_color_dark = "#464545"
 var cr_background_w_color_dark = "#464545"
-var default_foreground_color_light = "#ededed"
+var default_foreground_color_light = "#FFFFFF"
 var default_foreground_color_dark = "#464545"
 var cr_text_color_dark = "#E0E0E0";
 var cr_link_color_dark = "#FFFFFF";
@@ -127,7 +127,8 @@ var cr_background_color = "#F8F1E3";
 var cr_foreground_color = "#FFFFFF"
 var cr_text_color = "#333333";
 var cr_link_color = "#5F6368";
-var cr_theme = "custom-theme";
+var cr_theme;
+var cr_theme_sync;
 var cr_dark_panel = "on";
 var cr_display_footer = "on";
 var cr_display_outline = "off";
@@ -135,6 +136,50 @@ var cr_display_images = "on";
 var cr_display_meta = "on";
 var cr_display_author = "on";
 var cr_display_reading_time = "on";
+
+var font_family_changed;
+var font_size_changed;
+var line_height_changed;
+var letter_space_changed;
+var max_width_changed;
+
+var background_color_changed;
+var foreground_color_changed;
+var text_color_changed;
+var link_color_changed;
+var theme_sync_changed;
+
+var dark_panel_changed;
+var footer_changed;
+var outline_changed;
+var images_changed;
+var meta_changed;
+var author_changed;
+var read_time_changed;
+
+var previousDarkPanel;
+var previousFooter;
+var previousOutline;
+var previousImages;
+var previousMeta;
+var previousAuthor;
+var previousReadTime;
+var previousThemeSync;
+
+var previousLinkColor;
+var previousTextColor;
+var previousForegroundColor;
+var previousBackgroundColor;
+
+var previousFontFamily;
+var previousFontSize;
+var previousLineHeight;
+var previousLetterSpace;
+var previousMaxWidth;
+
+var tempThemeSync;
+var tempLastTheme='custom-theme';
+var tempDarkPanel;
 
 function showPalette(show, doc){
   if(!show){
@@ -680,9 +725,55 @@ function popupwindow(url, title, w, h) {
   );
 }
 
-// Save setting's value to storage
-function saveStorageValue(storage, val) {
-  chrome.storage.sync.set({[storage]: val});
+// // Save setting's value to storage
+// function saveStorageValue(k, val) {
+//   var original;
+//   var newValue;
+//   chrome.storage.sync.get(k, function(result){
+//     original = result[k]
+//     if(original !=val || !result){
+//       console.log("About to save - ",original," ==> ", val)
+//       chrome.storage.sync.set({[k]: val});
+//       if(!result){
+//         console.log("No data for ",k)
+//       }
+//       chrome.storage.sync.get(k, function(result){newValue = result;console.log("Saved value: \noriginal: ", original, "\nnew: ",newValue)})
+      
+//     }
+//   })
+// }
+
+function saveStorageValue(key, val) {
+  chrome.storage.sync.get(key, function(result) {
+      if (chrome.runtime.lastError) {
+          console.error("Error retrieving key:", key, chrome.runtime.lastError);
+          return;
+      }
+
+      const original = result[key]; // Retrieve the current value
+      if (original !== val) { // Only update if the value is different
+          console.log("About to save - ", original, " ==> ", val);
+
+          chrome.storage.sync.set({ [key]: val }, function() {
+              if (chrome.runtime.lastError) {
+                  console.error("Error saving value:", key, chrome.runtime.lastError);
+              } else {
+                  console.log("Value saved successfully for", key, ":", val);
+
+                  // Verify the saved value
+                  chrome.storage.sync.get(key, function(newResult) {
+                      if (chrome.runtime.lastError) {
+                          console.error("Error verifying saved value:", chrome.runtime.lastError);
+                      } else {
+                          console.log("Saved value for",key,"verified:\noriginal:", original, "\nnew:", newResult[key]);
+                      }
+                  });
+              }
+          });
+      } else {
+          console.log("No change detected. Value not updated for key:", key);
+      }
+  });
 }
 
 
@@ -705,7 +796,7 @@ function setFontFamily(doc, val, save) {
 
     cr_font_family = val;
     if(save){
-    chrome.storage.sync.set({cr_font_family: val});
+    saveStorageValue('cr_font_family', val);
     }
   $(doc).find('#cr-content-container').css( "font-family", val );
   $(doc).find(`#options-font-family select option[value='${val}']`).prop('selected', true);
@@ -731,7 +822,7 @@ function setFontSize(doc, val, save) {
 
     cr_font_size = val;
     if(save){
-    chrome.storage.sync.set({cr_font_size: val});
+    saveStorageValue('cr_font_size', val);
     }
   $(doc).find("#cr-content-container").css( "font-size", val );
   $(doc).find("#options-font-size input").val(  val );
@@ -757,7 +848,7 @@ function setLineHeight(doc, val, save) {
 
     cr_line_height = val;
     if(save){
-    chrome.storage.sync.set({cr_line_height: val});
+    saveStorageValue('cr_line_height', val);
     }
   $(doc).find("#cr-content-container").css( "line-height", val );
   $(doc).find("#options-line-height input").val(  val );
@@ -783,7 +874,7 @@ function setLetterSpace(doc, val, save) {
 
     cr_letter_space = val;
     if(save){
-    chrome.storage.sync.set({cr_letter_space: val});
+    saveStorageValue('cr_letter_space', val);
     }
   $(doc).find("#cr-content-container").css( "letter-spacing", val );
   $(doc).find("#options-letter-space input").val(  val );
@@ -809,7 +900,7 @@ function setMaxWidth(doc, val, save) {
 
     cr_max_width = val;
     if(save){
-    chrome.storage.sync.set({cr_max_width: val});
+    saveStorageValue('cr_max_width', val);
     }
 
   cr_max_width = val;
@@ -819,13 +910,15 @@ function setMaxWidth(doc, val, save) {
 }
 function setBackgroundColor(doc, val, theme, save) {
   
+  
+
   if (theme == "light-theme") {
     cr_background_color_light = default_background_color_light;
 
     console.log("set background color to ", default_background_color_light)
-    chrome.storage.sync.set({cr_background_color_light: default_background_color_light});
+    saveStorageValue('cr_background_color_light', default_background_color_light);
     if(save){
-      chrome.storage.sync.set({cr_background_color_light: default_background_color_light});
+      saveStorageValue('cr_background_color_light', default_background_color_light);
     }
   } 
   else if (theme == "dark-theme"){
@@ -833,7 +926,7 @@ function setBackgroundColor(doc, val, theme, save) {
     console.log("set background color to ", val)
  
     if(save){
-      chrome.storage.sync.set({cr_background_color_dark: default_background_color_dark});
+      saveStorageValue('cr_background_color_dark', default_background_color_dark);
     }
   } 
   else if (theme == "custom-theme"){
@@ -858,7 +951,7 @@ function setBackgroundColor(doc, val, theme, save) {
  
     rateLimitLog("set background color to ", val)
     if(save){
-    chrome.storage.sync.set({cr_background_color: val});
+    saveStorageValue('cr_background_color', val);
     console.log("stored custom color ", val)
     }
   } else {
@@ -881,7 +974,7 @@ function setForegroundColor(doc, val, theme, save) {
     console.log("set foreground color to ", default_foreground_color_light)
 
     if(save){
-      chrome.storage.sync.set({cr_foreground_color_light: default_foreground_color_light});
+      saveStorageValue('cr_foreground_color_light', default_foreground_color_light);
     }
   } 
   else if (theme == "dark-theme"){
@@ -889,7 +982,7 @@ function setForegroundColor(doc, val, theme, save) {
     console.log("set foreground color to ", val)
 
     if(save){
-      chrome.storage.sync.set({cr_foreground_color_dark: default_foreground_color_dark});
+      saveStorageValue('cr_foreground_color_dark', default_foreground_color_dark);
     }
   } 
   else if (theme == "custom-theme"){
@@ -913,7 +1006,7 @@ function setForegroundColor(doc, val, theme, save) {
 
     rateLimitLog("set Foreground color to ", val)
     if(save){
-    chrome.storage.sync.set({cr_foreground_color: val});
+    saveStorageValue('cr_foreground_color', val);
     console.log("stored custom foreground", val)
     }
   }
@@ -949,13 +1042,13 @@ function setTextColor(doc, val, theme, save) {
     cr_text_color_light = val;
 
     if(save){
-    chrome.storage.sync.set({cr_text_color_light: val})
+    saveStorageValue('cr_text_color_light', val)
     }
   } else if (theme == "dark-theme"){
     cr_text_color_dark = val;
 
     if(save){
-    chrome.storage.sync.set({cr_text_color_dark: val})
+    saveStorageValue('cr_text_color_dark', val)
     }
   } else if (theme == "custom-theme"){
 
@@ -978,7 +1071,7 @@ function setTextColor(doc, val, theme, save) {
 
     cr_text_color = val;
     if(save){
-    chrome.storage.sync.set({cr_text_color: val})
+    saveStorageValue('cr_text_color', val)
     }
   } else {
   }
@@ -1004,13 +1097,13 @@ function setLinkColor(doc, val, theme, save) {
     cr_link_color_light = val;
 
     if(save){
-    chrome.storage.sync.set({cr_link_color_light: val})
+    saveStorageValue('cr_link_color_light', val)
     }
   } else if (theme == "dark-theme"){
     cr_link_color_dark = val;
 
     if(save){
-    chrome.storage.sync.set({cr_link_color_dark: val})
+    saveStorageValue('cr_link_color_dark', val)
     }
   } else if (theme == "custom-theme"){
 
@@ -1035,7 +1128,7 @@ function setLinkColor(doc, val, theme, save) {
 
 
     if(save){
-    chrome.storage.sync.set({cr_link_color: val})
+    saveStorageValue('cr_link_color', val)
     }
   } else {
   }
@@ -1048,14 +1141,11 @@ function setLinkColor(doc, val, theme, save) {
 
 
 function setTheme(doc, val, save){
- 
-    cr_theme = val;
-    if(save){
-    chrome.storage.sync.set({cr_theme: val});
-    }
-
+  console.log('---setTheme called---')
+  cr_theme = val;
+  console.log("SET cr_theme TO VALUE OF - ", cr_theme)
   $(doc).find("#options-theme ul li a").each(function(){
-    if ( $(this).attr("data-theme") == val ) {
+    if ($(this).attr("data-theme") == val) {
       $(this).addClass("active");
     } else {
       $(this).removeClass("active");
@@ -1069,29 +1159,49 @@ function setTheme(doc, val, save){
     setForegroundColor(doc, cr_foreground_color_light.toUpperCase(), "light-theme");
     setTextColor(doc, cr_text_color_light.toUpperCase(), "light-theme");
     setLinkColor(doc, cr_link_color_light.toUpperCase(), "light-theme");
+    console.log("CHANGED TO LIGHT THEME")
 
     $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color_light.toUpperCase());
-  
-  } else if (val == "dark-theme"){
+
+  } else if (val == "dark-theme") {
     showPalette(false, doc);
     setBackgroundColor(doc, cr_background_color_dark.toUpperCase(), "dark-theme");
     setForegroundColor(doc, cr_foreground_color_dark.toUpperCase(), "dark-theme");
     setTextColor(doc, cr_text_color_dark.toUpperCase(), "dark-theme");
     setLinkColor(doc, cr_link_color_dark.toUpperCase(), "dark-theme");
     $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color_dark.toUpperCase());
-
-  } else if (val == "custom-theme"){
+    console.log("CHANGED TO DARK THEME")
+  } else if (val == "custom-theme") {
     showPalette(true, doc);
     setBackgroundColor(doc, cr_background_color.toUpperCase(), "custom-theme");
     setForegroundColor(doc, cr_foreground_color.toUpperCase(), "custom-theme");
     setTextColor(doc, cr_text_color.toUpperCase(), "custom-theme");
     setLinkColor(doc, cr_link_color.toUpperCase(), "custom-theme");
     $(doc).find('::-webkit-scrollbar-track').css('background', cr_background_color.toUpperCase());
-    
-   
-  } else {
+    console.log("CHANGED TO CUSTOM THEME")
+  }``
+
+  if(tempThemeSync=='off'){
+    saveStorageValue('last_manual_theme', cr_theme)
+    console.log("Manually changed, saving entry! - ",cr_theme)
   }
-  saveStorageValue("cr_theme", cr_theme);
+  else{
+    console.log("theme sync is not off. Value is - ",tempThemeSync)
+  }
+
+  // chrome.storage.sync.get('cr_theme_sync', function(result){
+  //   if(result['cr_theme_sync'] == 'off'){
+  //     saveStorageValue('last_manual_theme', cr_theme)
+  //     console.log("Manually changed, saving entry! - ",cr_theme)
+  //   }
+  //   else{
+  //     console.log("theme sync is not off. Value is - ",result['cr_theme_sync'])
+  //   }
+  // })
+
+  console.log("REQUESTING SAVE FOR cr_theme - ", cr_theme)
+  saveStorageValue('cr_theme', cr_theme)
+  console.log("Saved new theme config")
 }
 
 function setDisplayOutline(doc, status, save) {
@@ -1121,7 +1231,7 @@ function setDisplayOutline(doc, status, save) {
  
     cr_display_outline = status;
     if(save){
-    chrome.storage.sync.set({cr_display_outline: status});
+    saveStorageValue('cr_display_outline', status);
     previousOutline = status;
     }
   
@@ -1153,7 +1263,7 @@ function setDisplayImages(doc, status, save) {
   if (save) {
     cr_display_images = status;
     
-    chrome.storage.sync.set({cr_display_images: status});
+    saveStorageValue('cr_display_images', status);
 
     previousImages = status;
     
@@ -1191,7 +1301,7 @@ function setDisplayMeta(doc, status, save) {
   if (save) {
     cr_display_meta = status;
     
-    chrome.storage.sync.set({cr_display_meta: status});
+    saveStorageValue('cr_display_meta', status);
 
     previousMeta = status;
     
@@ -1227,7 +1337,7 @@ function setDisplayAuthor(doc, status, save) {
   if (save) {
     cr_display_author = status;
     
-    chrome.storage.sync.set({cr_display_author: status});
+    saveStorageValue('cr_display_author', status);
     previousAuthor = status;
     
   }
@@ -1260,14 +1370,14 @@ function setDisplayReadingTime(doc, status, save) {
   if (save) {
     cr_display_reading_time = status;
     
-    chrome.storage.sync.set({cr_display_reading_time: status});
+    saveStorageValue('cr_display_reading_time', status);
     previousReadTime = status;
     
   }
 }
 
 function setDarkPanel(doc, status, save){
-
+  tempDarkPanel = status
   if(previousDarkPanel == null){
     previousDarkPanel = status;
     console.log("Dark Panel: No previous data! Setting to - ", previousDarkPanel)
@@ -1289,19 +1399,101 @@ function setDarkPanel(doc, status, save){
   if (status == "on") {
     $(doc).find("#cr-container .options-panel").addClass("options-panel-dark");
     $(doc).find("#options-dark-panel input").prop("checked", true);
+    cr_dark_panel = status;
+
   } else {
     $(doc).find("#cr-container .options-panel").attr("class", "options-panel");
     $(doc).find("#options-dark-panel input").prop("checked", false);
+    cr_dark_panel = status;
   }
 
   if (save) {
-    cr_dark_panel = status;
 
-    chrome.storage.sync.set({cr_dark_panel: status});
+    saveStorageValue('cr_dark_panel', status);
 
     previousDarkPanel = status;    
     
   }
+}
+
+function setThemeSync(doc, status, save){
+  if(previousThemeSync==null){
+    previousThemeSync = status;
+    console.log("Theme Sync: No previous data! Setting to - ", previousThemeSync)
+    showThemeSave(doc, 0)
+  }
+  else if(previousThemeSync != status){
+    theme_sync_changed = true;
+    console.log("Theme Sync: Change detected! Marked as changed! Previous:",previousThemeSync," New:",status)
+    showOptionsSave(doc,0)
+  }
+  else if(previousThemeSync == status){
+    theme_sync_changed = false;
+    console.log("Theme Sync: No change detected! Marked as unchanged! Previous:",previousThemeSync," New:",status)
+    showOptionsSave(doc,0)
+  }
+  if (status == "on") {
+    cr_theme_sync = status;
+    saveStorageValue('cr_theme_sync',cr_theme_sync)
+    tempThemeSync = "on";
+    chrome.storage.sync.get('last_manual_theme', function(result){
+      console.log("Uploading last manual theme: - ",result['last_manual_theme'])
+      tempLastTheme = result['last_manual_theme']
+    })
+    if(window.matchMedia('(prefers-color-scheme: light)').matches){
+      cr_theme = "light-theme"
+    }
+    else{
+      cr_theme = "dark-theme"
+    }
+
+    $(doc).find('#options-theme').hide();
+    $(doc).find('#options-theme-sync input').prop("checked", true);
+    console.log("Set to default device theme: light=",window.matchMedia('(prefers-color-scheme: light)').matches)
+    console.log("Turned on sync -",cr_theme_sync)
+  }
+  else if(status=="off"){
+
+    // chrome.storage.sync.get('cr_theme_sync',function(result){
+    //   console.log("Current cr_theme_sync - ",result['cr_theme_sync'])
+    //   if(result['cr_theme_sync']=='on'){
+    //     chrome.storage.sync.get('last_manual_theme', function(result){
+    //       if(result['last_manual_theme']){
+    //         cr_theme = result['last_manual_theme']
+    //         console.log("Retrieved last manual theme! - ",cr_theme)
+    //       }
+    //       else{
+    //         console.log("No previously recorded manual theme changes, setting to custom.")
+    //         cr_theme = 'custom-theme'
+    //       }
+    //       console.log("Sync is off - restored last manual theme: - ",cr_theme)
+    //     })
+    //   }
+    // })
+    console.log("status switched to off")
+    if(tempThemeSync=='on'){
+      console.log("Theme sync going from on to off. Change to last manual theme.")
+      if(tempLastTheme){
+        console.log("Sync is going from on to off - restored last manual theme: - ",tempLastTheme)
+        cr_theme = tempLastTheme
+        console.log("Retrieved last manual theme! - ",cr_theme)
+      }
+      else{
+        console.log("Not previously recorded manual theme changes, setting to custom.")
+        cr_theme = 'custom-theme'
+      }
+    }
+    cr_theme_sync = status;
+    saveStorageValue('cr_theme_sync',cr_theme_sync)
+
+    $(doc).find('#options-theme').show();
+    $(doc).find('#options-theme-sync input').prop("checked", false);
+    console.log("Set to manual theme.")
+  }
+  tempThemeSync=status
+  previousThemeSync = status;
+  setTheme(doc,cr_theme,true)
+
 }
 
 function setDisplayFooter(doc, status, save) {
@@ -1332,7 +1524,7 @@ function setDisplayFooter(doc, status, save) {
   if (save) {
     cr_display_meta = status;
    
-    chrome.storage.sync.set({cr_display_meta: status});
+    saveStorageValue('cr_display_meta', status);
 
     previousFooter = status;
     
@@ -1342,7 +1534,7 @@ function setDisplayFooter(doc, status, save) {
 function setDefaultCss(doc, val, save){
   if (save) {
     cr_default_css = val;
-    chrome.storage.sync.set({'cr_default_css': val});
+    saveStorageValue('cr_default_css', val);
   }
   $(doc).find("#options-default-css textarea").html(val);
   if ($(doc).find("#cr_default_css").length == false) {
@@ -1375,6 +1567,9 @@ function optionsDefaultSettings(doc) {
       });
     }
   });
+
+  /////////////////////// NEVER USING GLOBAL VARIABLES CUZ WHY DID I SPEND 6 HOURS ON THIS STUPID THING THAT BROKE BECAUSE THE ORDER OF THE COMMANDS
+
   // Light Theme
   chrome.storage.sync.get(['cr_background_color_light'],function(result){ setBackgroundColor(doc, (default_background_color_light), "light-theme", true) });
   chrome.storage.sync.get(['cr_foreground_color_light'],function(result){ setForegroundColor(doc, (default_foreground_color_light), "light-theme", true) });
@@ -1391,7 +1586,15 @@ function optionsDefaultSettings(doc) {
   chrome.storage.sync.get(['cr_text_color'],function(result){ setTextColor(doc, (result.cr_text_color ? result.cr_text_color : "#333333"), "custom-theme", true) });
   chrome.storage.sync.get(['cr_link_color'],function(result){ setLinkColor(doc, (result.cr_link_color ? result.cr_link_color : "#5F6368"), "custom-theme", true) });
   // Theme (need to be down here bcoz setTheme requires themes' values)
-  chrome.storage.sync.get(['cr_theme'],function(result){ setTheme(doc, (result.cr_theme) ? result.cr_theme : "custom-theme", true) });
+  console.log("Getting theme...")
+  chrome.storage.sync.get(['cr_theme'],function(result){ console.log("reading theme - ",result.cr_theme);setTheme(doc, (result.cr_theme ? result.cr_theme : "custom-theme"), false); console.log("Got theme - ",result.cr_theme) })
+
+  // Theme Sync
+  chrome.storage.sync.get(['cr_theme_sync'],function(result){ tempThemeSync=(result.cr_theme_sync ? result.cr_theme_sync : "on");setThemeSync(doc, (result.cr_theme_sync) ? result.cr_theme_sync : "on", true) });
+  chrome.storage.sync.get(['last_manual_theme'],function(result){tempLastTheme=(result.last_manual_theme ? result.last_manual_theme : 'custom-theme')})
+  
+
+  
 
   // Reader Components
   chrome.storage.sync.get(['cr_dark_panel'],function(result){setDarkPanel(doc, (result.cr_dark_panel) ? result.cr_dark_panel : "on", true) });
@@ -1492,43 +1695,7 @@ function optionsPanelCloseHandler(doc){
   });
 }
 
-var font_family_changed;
-var font_size_changed;
-var line_height_changed;
-var letter_space_changed;
-var max_width_changed;
 
-var background_color_changed;
-var foreground_color_changed;
-var text_color_changed;
-var link_color_changed;
-
-var dark_panel_changed;
-var footer_changed;
-var outline_changed;
-var images_changed;
-var meta_changed;
-var author_changed;
-var read_time_changed;
-
-var previousDarkPanel;
-var previousFooter;
-var previousOutline;
-var previousImages;
-var previousMeta;
-var previousAuthor;
-var previousReadTime;
-
-var previousLinkColor;
-var previousTextColor;
-var previousForegroundColor;
-var previousBackgroundColor;
-
-var previousFontFamily;
-var previousFontSize;
-var previousLineHeight;
-var previousLetterSpace;
-var previousMaxWidth;
 
 function optionsStyle(doc) {
 
@@ -1547,8 +1714,9 @@ function optionsStyle(doc) {
 
 function getActiveTheme(doc){
   // Get active theme
-  cr_theme = $(doc).find("#options-theme ul li a.active").attr("data-theme");
-  return cr_theme;
+  active = $(doc).find("#options-theme ul li a.active").attr("data-theme");
+  console.log("Active theme requested - ", active)
+  return active;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1563,19 +1731,19 @@ function showThemeSave(doc){
   
   
   if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+    updateSaveButtonTheme(doc)
     $(doc).find(".options-panel-content button[name='save-options-style']").show();
     $(doc).find(".options-panel-content button[name='save-options-themes']").show();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
     removeSaveLabel(doc)
-      console.log("show theme save")
-      saving = false;
-      clearTimeout(themeSaveTimeout);
-      clearTimeout(optionsSaveTimeout);
-      clearTimeout(styleSaveTimeout);
+    console.log("show theme save")
+    saving = false;
+    clearTimeout(themeSaveTimeout);
+    clearTimeout(optionsSaveTimeout);
+    clearTimeout(styleSaveTimeout);
   }else{
     if(saving){
-      showSaveTimeout = 2500;
-
+      showSaveTimeout = 0;
     }
     else if(!saving){
       showSaveTimeout = 0;
@@ -1584,12 +1752,10 @@ function showThemeSave(doc){
     $(doc).find(".options-panel-content button[name='save-options-style']").hide();
     $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-      console.log("hide theme save - Timeout set")
-
+      //console.log("hide theme save - Timeout set")
       saving = false;
     }, showSaveTimeout);
   }
-  
 }
 
 
@@ -1598,6 +1764,7 @@ function showStyleSave(doc){
 
   
   if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+    updateSaveButtonTheme(doc)
     $(doc).find(".options-panel-content button[name='save-options-style']").show();
     $(doc).find(".options-panel-content button[name='save-options-themes']").show();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
@@ -1609,7 +1776,7 @@ function showStyleSave(doc){
       clearTimeout(styleSaveTimeout);
   }else{
     if(saving){
-      showSaveTimeout = 2500;
+      showSaveTimeout = 0;
 
     }
     else if(!saving){
@@ -1619,7 +1786,7 @@ function showStyleSave(doc){
     $(doc).find(".options-panel-content button[name='save-options-style']").hide();
     $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
     $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-      console.log("hide style save - Timeout set")
+      //console.log("hide style save - Timeout set")
 
       saving = false;
     }, showSaveTimeout);
@@ -1632,9 +1799,11 @@ function showOptionsSave(doc){
 
   
     if(font_family_changed || font_size_changed || line_height_changed || letter_space_changed || max_width_changed || dark_panel_changed || footer_changed || outline_changed || images_changed || meta_changed || author_changed || read_time_changed || background_color_changed || foreground_color_changed || link_color_changed || text_color_changed){
+      updateSaveButtonTheme(doc)
       $(doc).find(".options-panel-content button[name='save-options-style']").show();
       $(doc).find(".options-panel-content button[name='save-options-themes']").show();
       $(doc).find(".options-panel-content button[name='save-options-reader-components']").show();
+
       removeSaveLabel(doc);
         console.log("show options save")
         saving = false;
@@ -1643,7 +1812,7 @@ function showOptionsSave(doc){
         clearTimeout(styleSaveTimeout);
     }else{
       if(saving){
-        showSaveTimeout = 2500;
+        showSaveTimeout = 0;
 
       }
       else if(!saving){
@@ -1653,19 +1822,37 @@ function showOptionsSave(doc){
       $(doc).find(".options-panel-content button[name='save-options-style']").hide();
       $(doc).find(".options-panel-content button[name='save-options-themes']").hide();
       $(doc).find(".options-panel-content button[name='save-options-reader-components']").hide();
-        console.log("hide options save - Timeout set")
+        //console.log("hide options save - Timeout set")
         saving = false;
       }, showSaveTimeout);
     }
 
 }
 
+function updateSaveButtonTheme(doc) {
+  const saveButtons = $(doc).find(".options-panel-content button[name^='save-options']");
+  console.log('Configuring save buttons...')
+  // Add new theme class based on cr_theme
+  if (tempDarkPanel=='on') {
+    saveButtons.removeClass("save-button-light-theme");
+    saveButtons.find('span').removeClass("save-span-light-theme")
+    console.log("Removed light theme from save button")
+  }
+  else if(tempDarkPanel=='off'){
+    saveButtons.addClass("save-button-light-theme");
+    saveButtons.find('span').addClass("save-span-light-theme")
+    console.log("Changed button to light theme")
+  }
+}
+
+
 
 function optionsTheme(doc) {
 
 
   // Listeners
-  $(doc).find("#options-theme ul li a").click(function() { cr_theme = $(this).attr("data-theme"); setTheme(doc, cr_theme); });
+  $(doc).find("#options-theme ul li a").click(function() { cr_theme = $(this).attr("data-theme"); setTheme(doc, cr_theme,true); console.log("Theme changed")});
+  $(doc).find("#options-theme-sync input").change(function(){ setThemeSync(doc, getCheckboxStatus($(this))); console.log("Theme Sync clicked")})
   $(doc).find("#options-background-color input").on("input change", function() { setBackgroundColor(doc, $(this).val().toUpperCase(), getActiveTheme(doc)) });
   $(doc).find("#options-foreground-color input").on("input change", function() { setForegroundColor(doc, $(this).val().toUpperCase(), getActiveTheme(doc)) });
   $(doc).find("#options-text-color input").on("input change", function() { setTextColor(doc, $(this).val(), getActiveTheme(doc)) });
@@ -1731,6 +1918,7 @@ function optionsReaderComponents(doc) {
     cr_max_width = $(doc).find("#options-max-width input").val().trim();
     
     cr_theme = getActiveTheme(doc);
+    cr_theme_sync = getCheckboxStatus($(doc).find("#options-theme-sync input"))
     cr_background_color_active = $(doc).find("#options-background-color input[name='background_color']").val().trim().toUpperCase();
     cr_foreground_color_active = $(doc).find("#options-foreground-color input[name='foreground_color']").val().trim().toUpperCase();
     cr_text_color_active = $(doc).find("#options-text-color input[name='text_color']").val().trim().toUpperCase();
@@ -1788,9 +1976,9 @@ function optionsReaderComponents(doc) {
 
 
 
-    ////////////////////////////////////////////////
+    /////////////////////////////////////////////////
 
-    
+
     if (cr_theme == "light-theme") {
       cr_background_color_light = cr_background_color_active;
       cr_foreground_color_light = cr_foreground_color_active;
@@ -1851,9 +2039,8 @@ function optionsReaderComponents(doc) {
         link_color_changed = false;
       }
     
-    } else {
     }
-    setTheme(doc, cr_theme);
+    setTheme(doc, cr_theme,true);
     saving = true;
     showThemeSave(doc)
     console.log("saved theme")
@@ -2027,18 +2214,16 @@ function showSaveLabel(doc, e){
 }
 
 function removeSaveLabel(doc) {
-  // Find the text label using its class or another identifier
+  // Find the text label
   var textLabel = $(doc).find("#ui-save-label");
   
-  // Check if the element exists before attempting to remove it
+  
   if (textLabel.length > 0) {
     // Remove the text label
     textLabel.remove();
     console.log("SAVE LABEL REMOVED");
   }else{console.log("NO SAVE LABEL FOUND")};
 }
-
-
 
 
 function markAsChanged(changedElement){
@@ -2080,7 +2265,6 @@ function markAsChanged(changedElement){
   }
   console.log("changed value #", changedElement);
 }
-
 
 
 function init(){
